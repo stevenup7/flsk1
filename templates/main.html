@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+    <title>TestServer :: {{ name }}</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/main.css" rel="stylesheet" >
+    {% if session["username"] %}
+    <script type="text/javascript">
+      	var username = "{{ session["username"] }}";
+    </script>
+    {% endif %}
+    {% endblock %}
+  </head>
+  <body>
+    <div class="row-fluid">
+      <div id="top" class="span12">
+	{% if session["username"] %}
+	{{ session["username"] }} | <a href="/logout">logout</a> 
+	{% else %}
+	<a href="/login">login</a>  
+	{% endif %} 
+      </div>
+    </div>
+    <div class="container">
+      <h1>{{ mainHeading }}</h1>
+      <div class="row">
+	{% block content %}
+	{% endblock %}
+      </div>       
+    </div>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/static/js/underscore.js"></script>
+    <script src="/static/js/backbone.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    {% block optional_scripts %}{% endblock %}
+  </body>
+</html>
