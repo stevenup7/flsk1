@@ -44,7 +44,7 @@ def logout():
 @app.route('/')
 def index():
     name = "bob"
-    return render_template('1col.html', name=name, content_heading='test', content_body='<p>hi</p>')
+    return render_template('tzoneui.html', name=name, content_heading='Timezone Helper', content_body='')
 
 @app.route('/data/tzone/', methods=['GET'])
 def getAllTzone():

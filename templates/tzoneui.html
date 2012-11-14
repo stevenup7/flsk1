@@ -4,18 +4,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="span4" id="content1">
-  <h2>{{ content_heading }}</h2>
-  {{ content_body|safe }}	     
-</div>
 <div class="span8" id="content2">
-  <h2>The Stuff</h2>
+  <h2>{{ content_heading }}</h2>
   <div>
-    {{ lipsum() }}
+  {{ content_body|safe }}
+  <p>todo</p>
+  <p>this is where the map should go</p>
+  
+
   </div>
 </div>
+<div class="span4" id="content1">
+  <h2>My Contacts</h2>
+</div>
 {% endblock %}
-
 {% block optional_scripts %}
     <script id="tz-item" type="text/template">
       <span><%= firstName %> <%= lastName %> in <%= tzone %></span>
@@ -34,5 +36,5 @@
 	<button class="cancel-item btn">cancel</button>
       </div>
     </script>
-    <script type="text/javascript" src="/static/js/test.js"></script>
+    <script type="text/javascript" src="/static/js/tzoneapp.js"></script>
 {% endblock %}
