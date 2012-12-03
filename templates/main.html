@@ -7,7 +7,7 @@
     <link href="/static/css/main.css" rel="stylesheet" >
     {% if session["username"] %}
     <script type="text/javascript">
-      	var username = "{{ session["username"] }}";
+      var username = "{{ session["username"] }}";
     </script>
     {% endif %}
     {% endblock %}
@@ -16,13 +16,27 @@
     <div class="row-fluid">
       <div id="top" class="span12">
 	{% if session["username"] %}
-	{{ session["username"] }} | <a href="/logout">logout</a> 
+	{{ session["username"] }} | <a href="users/logout">logout</a> 
 	{% else %}
-	<a href="/login">login</a>  
+	<a href="users/login">login</a>  
 	{% endif %} 
       </div>
     </div>
+
+
     <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="row">
+	<div id="messages" class="span12">
+	  {% for category, message in messages %}
+	  <div class="{{ category }} alert"><button type="button" class="close" data-dismiss="alert">×</button>{{ message }}</div>
+	  {% endfor %}
+	</div> 
+      </div>
+      {% endif %}
+      {% endwith %}
+
       <h1>{{ mainHeading }}</h1>
       <div class="row">
 	{% block content %}

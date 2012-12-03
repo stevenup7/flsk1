@@ -1,94 +1,81 @@
-from flask import Flask
-from flask import render_template, redirect, request, make_response, session, url_for
+from flask import Flask 
+from flask import render_template, redirect, request, make_response, session, url_for, flash, g
 from bson.objectid import ObjectId
 from utils import *
 from config import *
+from users.views import login_required
 
 app = Flask(__name__)
 app.debug = True
 # set the secret key.  keep this really secret:
 app.secret_key = appConfig['secret_key']
 
+from users.views import mod as usersModule
+app.register_blueprint(usersModule)
+
 # init and teardown stuff 
 @app.before_request
 def before_request():
-    app.db, app.friends = getConnection()
+    g.db, g.friends = getConnection()
 
 @app.teardown_request
 def teardown_request(exception):
     dropConnection()
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    print "login" 
-    if request.method == 'POST':
-        print "post"
-        userQuery = {"username":        request.form['username'],
-                     "passwordhashed": hashPass(request.form['password'])}
-        u = app.db.users.find_one(userQuery)
-        print u
-        if u == None:
-            session.pop('username', None)
-            return redirect(url_for('login') + "?failed=true")
-        else:
-            session['username'] = request.form['username']
-            return redirect(url_for('index'))
-    return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    # remove the username from the session if it's there
-    session.pop('username', None)
-    return redirect(url_for('index'))
-
+# home page 
 @app.route('/')
 def index():
     name = "bob"
     return render_template('tzoneui.html', name=name, content_heading='Timezone Helper', content_body='')
 
+#get 
 @app.route('/data/tzone/', methods=['GET'])
-def getAllTzone():
-    data = []
-    for f in app.friends.find():
+@app.route('/data/tzone/<entryid>', methods=['GET'])
+@login_required
+def tzone(entryid=None):
+    if entryid == None:
+        data = []
+        for f in g.friends.find():
+            f["id"] = str(f["_id"])
+            del f["_id"]
+            data.append(f)
+        return makeJSONResponse(data)
+    else:
+        f = g.friends.find_one({'_id': ObjectId(entryid)})
         f["id"] = str(f["_id"])
         del f["_id"]
-        data.append(f)
-    return makeJSONResponse(data)
+        print f
+        return makeJSONResponse(f)
 
+# create
 @app.route('/data/tzone/', methods=['POST'])
+@login_required
 def createTZoneEntry():
     data = request.json
-    oid = app.friends.insert(data)
-    tz = app.friends.find_one({'_id': ObjectId(oid)})
+    oid = g.friends.insert(data)
+    tz = g.friends.find_one({'_id': ObjectId(oid)})
     tz['id'] = str(tz['_id'])
     del tz['_id']
     return makeJSONResponse(tz)
     
+# update 
 @app.route('/data/tzone/<entryid>', methods=['PUT'])
+@login_required
 def updateTZoneEntry(entryid):
-    app.friends.update({'_id': ObjectId(entryid)}, {'$set': request.json})
+    g.friends.update({'_id': ObjectId(entryid)}, {'$set': request.json})
     return makeJSONResponse({"message": "done"})
 
+# delete
 @app.route('/data/tzone/<entryid>', methods=['DELETE'])
+@login_required
 def deleteZoneEntry(entryid):
     print (entryid)
-    f = app.friends.remove({'_id': ObjectId(entryid)})
+    f = g.friends.remove({'_id': ObjectId(entryid)})
     resp = make_response(json.dumps({"message": "done"}), 200)
     resp.mimetype = 'application/json'
     return resp
 
-@app.route('/data/tzone/<int:entryid>', methods=['GET', 'POST'])
-def tzone(entryid=None):
-    print entryid 
-    if entryid == None:
-        print request.json, type(request.json)
-        i = request.json
-        print i
-        id = app.friends.insert(i)
-        return makeJSONResponse({"id": str(id)})
-    else:
-        return "tzone"
-
+# create the server if running from the command line 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
 
