@@ -21,14 +21,16 @@ def login_required(level=None):
 
 @mod.route('/admin', methods=['GET'])
 @login_required('SUPERUSER')
+@templated('users/admin.html')
 def userAdmin():
-    return "ok"
+    return {"content": "ok"}
 
-@mod.route('/admin1', methods=['GET'])
-@login_required()
-def userAdmin():
-    return "ok1"
-    
+@mod.route('/admin/userlist', methods=['GET'])
+@login_required('SUPERUSER')
+def userList():
+    users = cleanMongoList(g.db.users.find())
+    return makeJSONResponse(users)
+
 
 #login/logout code
 @mod.route('/login', methods=['GET', 'POST'])
@@ -50,7 +52,7 @@ def login():
             session['uid'] = str(u['_id'])
             session['levels'] = u['levels']
             return redirect(url_for('index'))
-    return render_template('login.html')
+    return render_template('users/login.html')
 
 @mod.route('/logout')
 def logout():

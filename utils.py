@@ -1,9 +1,9 @@
 import hashlib, uuid
-from flask import request, make_response, session
+from flask import request, make_response, session, render_template
 from config import appConfig
 import json
 from bson.objectid import ObjectId
-
+from functools import wraps
 
 def templated(template=None):
     def decorator(f):
@@ -20,6 +20,21 @@ def templated(template=None):
             return render_template(template_name, **ctx)
         return decorated_function
     return decorator
+
+def cleanMongoList(cursor):
+    #records = dict((record['_id'], record) for record in jsonList)
+    #print records
+    data = []
+    print "pre"
+    for i in cursor:
+        print "in"
+        i[u'id'] = str(i[u'_id'])
+        del i[u'_id']
+        print i
+
+        data.append(i)
+    print "done"
+    return data
 
 def makeJSONResponse(data):
     resp = make_response(json.dumps(data), 200)
