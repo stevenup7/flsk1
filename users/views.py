@@ -4,13 +4,31 @@ from utils import *
 
 mod = Blueprint('users', __name__, url_prefix='/users')
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not isLoggedIn():
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
+def login_required(level=None):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            levels = isLoggedIn()
+            if not levels:
+                return redirect(url_for('users.login', next=request.url))
+            else:
+                if level == None or level in levels:
+                    return f(*args, **kwargs)
+                else:
+                    return redirect(url_for('users.login', next=request.url))
+        return decorated_function
+    return decorator
+
+@mod.route('/admin', methods=['GET'])
+@login_required('SUPERUSER')
+def userAdmin():
+    return "ok"
+
+@mod.route('/admin1', methods=['GET'])
+@login_required()
+def userAdmin():
+    return "ok1"
+    
 
 #login/logout code
 @mod.route('/login', methods=['GET', 'POST'])
@@ -25,12 +43,12 @@ def login():
         if u == None:
             session.pop('username', None)
             flash(u'Invalid username or password', 'alert-error')
-            return redirect(url_for('users/login') + "?failed=true")
+            return redirect(url_for('users.login') + "?failed=true")
         else:
             flash(u'Login successful', 'alert-info')
             session['username'] = request.form['username']
             session['uid'] = str(u['_id'])
-            print session
+            session['levels'] = u['levels']
             return redirect(url_for('index'))
     return render_template('login.html')
 
@@ -45,7 +63,7 @@ def isLoggedIn():
     print "checking login"
     try:
         if session['username']:
-            return True
+            return session['levels']
         else:
             return False
     except:
