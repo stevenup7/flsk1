@@ -5,6 +5,7 @@ import json
 from bson.objectid import ObjectId
 from functools import wraps
 
+# templated decorator 
 def templated(template=None):
     def decorator(f):
         @wraps(f)
@@ -22,18 +23,11 @@ def templated(template=None):
     return decorator
 
 def cleanMongoList(cursor):
-    #records = dict((record['_id'], record) for record in jsonList)
-    #print records
     data = []
-    print "pre"
     for i in cursor:
-        print "in"
         i[u'id'] = str(i[u'_id'])
         del i[u'_id']
-        print i
-
         data.append(i)
-    print "done"
     return data
 
 def makeJSONResponse(data):

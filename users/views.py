@@ -25,7 +25,7 @@ def login_required(level=None):
 def userAdmin():
     return {"content": "ok"}
 
-@mod.route('/admin/userlist', methods=['GET'])
+@mod.route('/admin/data', methods=['GET'])
 @login_required('SUPERUSER')
 def userList():
     users = cleanMongoList(g.db.users.find())
