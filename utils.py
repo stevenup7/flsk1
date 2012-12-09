@@ -43,14 +43,20 @@ def createDocument(db, json):
     oid = db.insert(json)
     entry = db.find_one({'_id': ObjectId(oid)})
     entry['id'] = str(entry['_id'])
-    entry['uid'] = session['uid']
+    #entry['uid'] = session['uid']
     del entry['_id']
     return makeJSONResponse(entry)
 
 def updateDocumnet(db, entryid, json):
     json['uid'] = session['uid']
     db.update({'_id': ObjectId(entryid)}, {'$set': json})
-    return makeJSONResponse({"message": "done"})
+
+    entry = db.find_one({'_id': ObjectId(entryid)})
+    entry['id'] = str(entry['_id'])
+    #entry['uid'] = session['uid']
+    del entry['_id']
+    return makeJSONResponse(entry)
+
 
 def deleteDocument(db, entryid):
     entry = db.remove({'_id': ObjectId(entryid)})

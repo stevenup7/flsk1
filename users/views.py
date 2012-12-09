@@ -25,11 +25,45 @@ def login_required(level=None):
 def userAdmin():
     return {"content": "ok"}
 
+
+def hashifyPassword(json):
+    json["passwordhashed"] = hashPass(json["password"])
+    del json["password"]
+
 @mod.route('/admin/data', methods=['GET'])
 @login_required('SUPERUSER')
 def userList():
     users = cleanMongoList(g.db.users.find())
     return makeJSONResponse(users)
+
+# create
+@mod.route('/admin/data', methods=['POST'])
+@login_required('SUPERUSER')
+def createUser():
+    json = request.json
+    hashifyPassword(json)
+    return createDocument(g.db.users, json)
+
+
+# update 
+@mod.route('/admin/data/<entryid>', methods=['PUT'])
+@login_required('SUPERUSER')
+def updateUser(entryid):
+    json = request.json
+    print "update user"
+    print json
+    if json["password"] == "": 
+        del json["password"]
+    else:
+        hashifyPassword(json)
+    print json
+    return updateDocumnet(g.db.users, entryid, request.json)
+
+# delete
+@mod.route('/admin/data/<entryid>', methods=['DELETE'])
+@login_required('SUPERUSER')
+def deleteUser(entryid):
+    return deleteDocument(g.db.users, entryid)
 
 
 #login/logout code
@@ -40,6 +74,7 @@ def login():
         print "post"
         userQuery = {"username":        request.form['username'],
                      "passwordhashed": hashPass(request.form['password'])}
+        print userQuery
         u = g.db.users.find_one(userQuery)
         print u
         if u == None:

@@ -1,18 +1,39 @@
 var Form = function(){
-   this.wrappertpl = _.template('<div class="form-wrapper"><%= formBody%></div>');
    this.fields = [];
+   this.containerEl = undefined;
    return this;
 }
-Form.prototype.render = function(model) {
+Form.prototype.wrappertpl = _.template('<div class="form-wrapper <%= formClass%>"><%= formBody%></div>');
+Form.prototype.buttonstpl = _.template('<button class="save-item btn btn-primary">save</button> <% if(typeof(withdelete)==="undefined"?true:withdelete===true){ %><button class="delete-item btn btn-danger">delete</button> <% } %><button class="cancel-item btn">cancel</button>');
+Form.prototype.loadModel = function(model){
+   if(model === undefined){
+      model = {set: function(k,v){ this[k] = v}}
+   }
+   var getValue = ""
+   var that = this;
+
+   _(this.fields).each(function(field){
+      model.set(field.name, that.containerEl.find("." + field.name).val());
+   });
+   return model;
+}
+Form.prototype.render = function(containerEl, model, withDelete, formClass) {
+   if(model === undefined){
+      model = {get:function(){return ""}};
+   }
+   this.containerEl = containerEl;
    var renderData = {
       "formBody" :"",
-      "formTitle": ""
+      "formTitle": "",
+      "withdelete": withDelete,
+      "formClass": formClass
    }
    console.log(model);
    _(this.fields).each(function(field){
       renderData["formBody"] += field.render(model.get(field.name) );
    });
-   return this.wrappertpl(renderData);
+   renderData["formBody"] += this.buttonstpl(renderData);
+   containerEl.html(this.wrappertpl(renderData));
 } 
 Form.prototype.addField = function(name, label, type, options){
    this.fields.push(new FormField(name, label, type, options));
@@ -30,9 +51,9 @@ var FormField = function(name, label, type, options){
 FormField.prototype.fldtpl = _.template('<div><label for="<%= name%>"><%= label %></label><%= field %></div>');
 
 FormField.prototype.typetpls = {
-   "text":     _.template('<input type="text" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
-   "password": _.template('<input type="pasword" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
-   "select":   _.template('<select></select>'),
+   "text":      _.template('<input type="text" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
+   "password":  _.template('<input type="pasword" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
+   "select":    _.template('<select></select>'),
    "tickset":   _.template('<ul><% _.each(options.values, function(i){%> <li><label class="checkbox"><input type="checkbox" value="<%= i%>"><%= i%></label></li><% }); %></ul>')
 }
 FormField.prototype.render = function(value) {
@@ -69,7 +90,8 @@ var GeneralItemView = Backbone.View.extend({
       this.renderform();
    },
    renderform: function(){
-      this.$el.html(this.form.render(this.model));
+      // render the form 
+      this.form.render(this.$el, this.model, true);
       return this;
    },    
    render: function(){
@@ -78,7 +100,14 @@ var GeneralItemView = Backbone.View.extend({
       return this;
    },
    saveitem: function(){
-      alert("you must overwrite the method");
+      // save the form  
+      // get the values from the form
+      this.form.loadModel(this.model);
+
+      this.model.save();
+      this.render();
+      // save the model 
+      //alert("you must overwrite the method");
    },
    unrender: function(){
       $(this.el).remove();
@@ -105,7 +134,6 @@ var GeneralListView = Backbone.View.extend({
       'click a.add': 'addItem',
       'keyup input.person-name': 'keyup',
       'click .addnew': 'showform', 
-      'click .add-form-wrapper .cancel-item': 'hideform',
       'click .add-form-wrapper .save-item': 'addItem'
    },
    initialize: function(){
@@ -119,15 +147,10 @@ var GeneralListView = Backbone.View.extend({
    render: function(){
       console.log("general list render");
       var self = this;
-      this.$el.append("<ul class='list-wrapper'></ul>");
-      var tmpl = _.template(this.addtemplate);
-
-      this.$el.append("<div class='add-form-wrapper hide'>" + 
-		      tmpl({firstName:"", lastName: "", tzone: "", withdelete: false})
-		      + "</div>" + 
-		      "<div><button class='btn addnew'>add new person</button></div>");
+      this.$el.html("<ul class='list-wrapper unstyled'></ul><span class='addnew btn'>Add New</span>");
+//      var tmpl = _.template(this.addtemplate);
   
-    _(this.collection.models).each(function(item){
+      _(this.collection.models).each(function(item){
 	 console.log("item:", item);      
 	 self.appendItem(item);
       }, this);
@@ -139,37 +162,21 @@ var GeneralListView = Backbone.View.extend({
    },
    showform: function(){
       console.log("show ", this.$el);
-      // -----------------------------------------
       _(this.collection.models).each(function(item){
 	 // trigger cancel edit on the model caught by the model view
 	 item.trigger("cancel-edit");
       }, this);
-      this.$el.find(".add-form-wrapper").show();
-	 this.$el.find(".tzlv-wrapper").hide();
-   },
-   hideform: function(){
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////// TODO ////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////
-      this.$el.find(".add-form-wrapper input").val("");
-      this.$el.find(".add-form-wrapper").hide();
-      this.$el.find(".tzlv-wrapper").show();
+      console.log("this", this);
+      this.addForm.render(this.$el, undefined, false, "add-form-wrapper");
    },
    addItem: function(){
-      var i = new TZItem();
-      var fm = $(this.$el.find('.add-form-wrapper'));
-      i.set({
-	 firstName: fm.find('.firstName').val(),
-	 lastName: fm.find('.lastName').val(),
-	 nicName: fm.find('.nicName').val(),
-	 tzone: fm.find('.tzone').val(),
-      })
-      if(!i.isValid()){
-	 return false;
-      }
-      i.save();
+      console.log("list view" , this);
+      var i = new this.model();
+      /////////////////// >>>>>>>>>>>>>>>>>
+      var i = this.addForm.loadModel(i);
       this.collection.add(i);
-      this.hideform();
+      i.save();
+      this.render();
    },
    appendItem: function(i){
       var itemView = new this.itemView({
@@ -186,10 +193,11 @@ var GeneralListView = Backbone.View.extend({
       .addField("firstName", "First Name", "text")
       .addField("lastName", "Last Name", "text")
       .addField("username", "User Name", "text")
+      .addField("password", "password", "text")
       .addField("levels", "Levels", "tickset", {"values": ["SUPERUSER", "ADMIN", "USER"]})
 
    var SystemUser = Backbone.Model.extend({
-      urlRoot: 'users/admin/data',
+      urlRoot: '/users/admin/data',
       defaults: {
 	 firstName: 'unnamed',
 	 lastName: 'unnamed',
@@ -201,7 +209,7 @@ var GeneralListView = Backbone.View.extend({
       }
    });
    var SystemUserView = GeneralItemView.extend({
-      template: $("#user-list-item").html(),
+      template: '<span><%= firstName %> <%= lastName %></span><span class="change btn btn-mini">edit</span>',
       form: personForm
    });
    var SystemUserList = GeneralList.extend({
@@ -209,13 +217,14 @@ var GeneralListView = Backbone.View.extend({
       model: SystemUser
    });
    var SystemUserListView = GeneralListView.extend({
-      addtemplate: $("#userlistadd").html(),
+      model: SystemUser,
       itemView: SystemUserView,
-      collectionType: SystemUserList
+      collectionType: SystemUserList,
+      addForm: personForm
    });
 
    var lView  = new SystemUserListView({
-      el: $("#admin-content1"),
+      el: $("#userlist"),
    });
 
 })(jQuery);
