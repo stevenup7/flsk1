@@ -16,9 +16,9 @@
     <div class="row-fluid">
       <div id="top" class="span12">
 	{% if session["username"] %}
-	{{ session["username"] }} | <a href="users/logout">logout</a> 
+	{{ session["username"] }} | <a href="/users/logout">logout</a> 
 	{% else %}
-	<a href="users/login">login</a>  
+	<a href="/users/login">login</a>  
 	{% endif %} 
       </div>
     </div>
