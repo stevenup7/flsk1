@@ -11,9 +11,17 @@ Form.prototype.loadModel = function(model){
    }
    var getValue = ""
    var that = this;
-
+   console.log("load model");
    _(this.fields).each(function(field){
-      model.set(field.name, that.containerEl.find("." + field.name).val());
+      if(field.isArrayType){
+	 var rsltArray = [];
+	 that.containerEl.find("." + field.name + ":checked").each(function(){
+	    rsltArray.push($(this).val());
+	 });
+	 model.set(field.name, rsltArray);
+      }else {
+	 model.set(field.name, that.containerEl.find("." + field.name).val());
+      }
    });
    return model;
 }
@@ -45,6 +53,11 @@ var FormField = function(name, label, type, options){
    this.type = type;
    this.options = options;
    this.value = "";
+   if(type === "tickset"){
+      this.isArrayType = true;
+   } else {
+      this.isArrayType = false;
+   }
    return this;
 }
 
@@ -54,10 +67,20 @@ FormField.prototype.typetpls = {
    "text":      _.template('<input type="text" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
    "password":  _.template('<input type="pasword" class="<%= name%>" name="<%= name%>" value="<%= value %>" />'),
    "select":    _.template('<select></select>'),
-   "tickset":   _.template('<ul><% _.each(options.values, function(i){%> <li><label class="checkbox"><input type="checkbox" value="<%= i%>"><%= i%></label></li><% }); %></ul>')
+   "tickset":   _.template('<ul><% _.each(options.values, function(i,x){%> <li><label class="checkbox"><input type="checkbox" value="<%= i%>" name="<%= name %>" <%=  checked[x]%> class="<%= name %>" :><%= i%></label></li><% }); %></ul>')
 }
 FormField.prototype.render = function(value) {
    this.value = value;
+   var checked = [];
+   if(this.isArrayType){
+        _.each(this.options.values, function(i,x){
+	 console.log("vi" , value, i, _.indexOf(value, i));
+	 // eeeeewwwww
+	 checked[x] = (_.indexOf(value, i) === -1)?"":" checked='checked'";
+      });
+      console.log(checked);
+      this.checked = checked;
+   }
    return this.fldtpl({
       "field": this.typetpls[this.type](this),
       "label": this.label,
@@ -202,6 +225,7 @@ var GeneralListView = Backbone.View.extend({
 	 firstName: 'unnamed',
 	 lastName: 'unnamed',
 	 nicName: 'unnamed',
+	 levels: []
       },
       initialize: function(){
       },
