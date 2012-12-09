@@ -29,6 +29,7 @@ def teardown_request(exception):
 # home page 
 @app.route('/')
 def index():
+    # todo: add real content
     name = "bob"
     return render_template('tzoneui.html', name=name, content_heading='Timezone Helper', content_body='')
 
