@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+
 {% block head %}
     {{ super() }}
 {% endblock %}
@@ -7,12 +8,18 @@
 <div class="span8" id="content2">
   <h2>{{ content }}</h2>
   <div>
-  {{ content_body|safe }}
-  <p>todo</p>
-  <p>this is where the map should go</p>
-  
-
+    {{ content_body|safe }}
   </div>
+  <div style="background-color: #08C; padding: 5px; color: white; font-weight: bold;" id="your-location" class="hide">
+    <i class="icon-white icon-chevron-right"></i>
+    You are here: 
+    <div class="btn-group">
+      <a class="btn btn-success btn-small">yes</a> | <a class="btn btn-warning btn-small">no</a>
+    </div>
+  </div>
+  <div id="map-canvas" style="height: 300px; width: 100%"></div>
+
+
 </div>
 <div class="span4" id="content1">
   <h2>My Contacts</h2>
@@ -36,5 +43,6 @@
 	<button class="cancel-item btn">cancel</button>
       </div>
     </script>
-    <script type="text/javascript" src="/static/js/tzoneapp.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
+    <script type="text/javascript" src="/static/js/tzone.js"></script>
 {% endblock %}

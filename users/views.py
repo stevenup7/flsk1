@@ -75,8 +75,10 @@ def createUser():
 def updateUser(entryid):
     json = request.json
     if json["password"] == "": 
+        flash(u'No Pass', 'alert-error')
         del json["password"]
     else:
+        flash(u'Hashed Pass', 'alert-info')
         hashifyPassword(json)
     return updateDocumnet(g.db.users, entryid, request.json)
 

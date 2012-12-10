@@ -20,6 +20,7 @@ app.register_blueprint(tzoneModule)
 # init and teardown stuff 
 @app.before_request
 def before_request():
+    g.appConfig = appConfig
     g.db  = getConnection()
 
 @app.teardown_request
