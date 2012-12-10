@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="span4" id="admin-menu">
+  <h3>Admin Menu</h3>
+  <ul>
+    <li><a href="#">list users</a></li>
+    <li><a href="#">add user</a></li>
+    <li><a href="/users/admin/changepass">change my password</a></li>
+  </ul>
+</div>
+
+<div class="span8" id="admin-content1">
+  <h4>Update Password</h4>
+  
+  <div>
+    <label for="currPass">Current Password</label><input type="text" class="lastName" name="lastName" value="Upritchard">
+  </div>
+
+</div>
+{% endblock %}
+{% block optional_scripts %}
+<!--
+<script id="user-list-item" type="text/template">
+  <span><%= firstName %> <%= lastName %></span>
+  <span class="change btn btn-mini">edit</span>
+</script>
+-->
+
+
+<script type="text/javascript" src="/static/js/backbone.extensions.js"></script>
+<script type="text/javascript" src="/static/js/useradmin.js"></script>
+
+{% endblock %}

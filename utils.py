@@ -22,6 +22,9 @@ def templated(template=None):
         return decorated_function
     return decorator
 
+def getOneByID(db, oid):
+    return db.find_one({'_id': ObjectId(oid)})
+
 # switches the mongo _id and switch it for a id attribute for backbock
 def cleanMongoList(cursor):
     data = []
@@ -63,7 +66,6 @@ def updateDocumnet(db, entryid, json):
         entry['uid'] = session['uid']
     del entry['_id']
     return makeJSONResponse(entry)
-
 
 def deleteDocument(db, entryid):
     entry = db.remove({'_id': ObjectId(entryid)})

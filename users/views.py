@@ -4,6 +4,22 @@ from utils import *
 
 mod = Blueprint('users', __name__, url_prefix='/users')
 
+# check the session to see if they are logged in 
+def isLoggedIn():
+    try:
+        if session['username']:
+            return session['levels']
+        else:
+            return False
+    except:
+        return False
+
+# grab all of the details for the current user
+def getCurrentUser():
+    user = getOneByID(g.db.users, session['uid'])
+    return user
+
+# decorator for login levels 
 def login_required(level=None):
     def decorator(f):
         @wraps(f)
@@ -19,12 +35,20 @@ def login_required(level=None):
         return decorated_function
     return decorator
 
+#todo make a json login required decoator which returns {"status" :  "login-required" }
+
+
 @mod.route('/admin', methods=['GET'])
 @login_required('SUPERUSER')
 @templated('users/admin.html')
 def userAdmin():
     return {"content": "ok"}
 
+@mod.route('/admin/changepass', methods=['GET'])
+@login_required()
+@templated('users/changepass.html')
+def changePassword():
+    return getCurrentUser()
 
 def hashifyPassword(json):
     json["passwordhashed"] = hashPass(json["password"])
@@ -50,13 +74,10 @@ def createUser():
 @login_required('SUPERUSER')
 def updateUser(entryid):
     json = request.json
-    print "update user"
-    print json
     if json["password"] == "": 
         del json["password"]
     else:
         hashifyPassword(json)
-    print json
     return updateDocumnet(g.db.users, entryid, request.json)
 
 # delete
@@ -65,18 +86,14 @@ def updateUser(entryid):
 def deleteUser(entryid):
     return deleteDocument(g.db.users, entryid)
 
-
 #login/logout code
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
     print "login" 
     if request.method == 'POST':
-        print "post"
         userQuery = {"username":        request.form['username'],
                      "passwordhashed": hashPass(request.form['password'])}
-        print userQuery
         u = g.db.users.find_one(userQuery)
-        print u
         if u == None:
             session.pop('username', None)
             flash(u'Invalid username or password', 'alert-error')
@@ -96,12 +113,3 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-def isLoggedIn():
-    print "checking login"
-    try:
-        if session['username']:
-            return session['levels']
-        else:
-            return False
-    except:
-        return False
