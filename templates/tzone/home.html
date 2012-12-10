@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="span8" id="content2">
+  <h2>{{ content }}</h2>
+  <div>
+  {{ content_body|safe }}
+  <p>todo</p>
+  <p>this is where the map should go</p>
+  
+
+  </div>
+</div>
+<div class="span4" id="content1">
+  <h2>My Contacts</h2>
+</div>
+{% endblock %}
+{% block optional_scripts %}
+    <script id="tz-item" type="text/template">
+      <span><%= firstName %> <%= lastName %> in <%= tzone %></span>
+      <span class="change btn btn-mini">edit</span>
+    </script>
+    <script id="tz-item-form" type="text/template">
+      <h4>Edit <span><%= firstName %> <%= lastName %></span></h4>
+      <div><label>First Name</label><input type="text" class="firstName" name="firstName" value="<%= firstName %>" /></div>
+      <div><label>Last Name</label><input type="text" class="lastName" name="lastName" value="<%= lastName %>" /></div>
+      <div><input type="text" class="tzone" name="tzone" value="<%= tzone %>" /></div>
+      <div>
+	<button class="save-item btn btn-primary">save</button>
+	<% if(typeof(withdelete)==="undefined"?true:withdelete===true){ %>
+	<button class="delete-item btn btn-danger">delete</button>
+	<% } %>
+	<button class="cancel-item btn">cancel</button>
+      </div>
+    </script>
+    <script type="text/javascript" src="/static/js/tzoneapp.js"></script>
+{% endblock %}

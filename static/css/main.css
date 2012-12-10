@@ -4,8 +4,17 @@
     padding: 10px 50px 10px 10px;
     text-align: right;
 }
+#main-menu {
+    background-color: #222;
+    -webkit-border-radius: 0px 0px 10px 10px;
+    border-radius: 0px 0px 10px 10px;
+}
+#main-menu a,
 #top a {
     color: white;
+}
+#main-menu {
+    background-color: #666;
 }
 h1 {
     color: #843229;

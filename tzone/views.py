@@ -4,7 +4,13 @@ from utils import *
 
 from users.views import login_required
 
-mod = Blueprint('tzone', __name__, url_prefix='/data/tzone')
+mod = Blueprint('tzone', __name__, url_prefix='/tzone')
+
+
+@mod.route('/home', methods=['GET'])
+@templated("tzone/home.html")
+def home():
+    return {"content" : "home", "content_body" : "body "}
 
 #get 
 @mod.route('/', methods=['GET'])
