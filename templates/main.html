@@ -18,20 +18,22 @@
   <body>
     <div class="row-fluid">
       <div id="top" class="span12">
-	{% if "SUPERUSER" in session["levels"] %}
-	<a href="/users/admin">Admin Menu</a> | 
-	{% endif %}
-	{% if session["username"] %}
-	{{ session["username"] }} | <a href="/users/logout">logout</a> 
-	{% else %}
-	<a href="/users/login">login</a>  
-	{% endif %} 
+	<div>
+	  {% if "SUPERUSER" in session["levels"] %}
+	  <a href="/users/admin">Admin Menu</a> | 
+	  {% endif %}
+	  {% if session["username"] %}
+	  {{ session["username"] }} | <a href="/users/logout">logout</a> 
+	  {% else %}
+	  <a href="/users/login">login</a>  
+	  {% endif %} 
+	</div>
       </div>
     </div>
-
-    <div class="container">
-      <div class="row">
-	<div id="main-menu" class="span12">
+    <div id="main-menu-wrapper">
+      <div id="main-menu" class="container">
+	<div class="row">
+	  <h1>Timezones</h1>
 	  <ul class="inline">
 	    <li><a href="/">home</a></li>
 	    <li><a href="/tzone/home">timezone</a></li>

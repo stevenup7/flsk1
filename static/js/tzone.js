@@ -1,5 +1,37 @@
 var map;
+var markers = {
+   me: undefined,
+   contacts: []
+};
 
+function getColoredMarker(col){
+   var pinColor = col;
+   var pinImage = new google.maps.MarkerImage(
+      "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+      new google.maps.Size(21, 34),
+      new google.maps.Point(0,0),
+      new google.maps.Point(10, 34));
+   var pinShadow = new google.maps.MarkerImage(
+      "http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+      new google.maps.Size(40, 37),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(12, 35));
+   return [pinImage, pinShadow];
+}
+
+function addMarker(location) {
+   console.log("adding location");
+   pinImage = getColoredMarker("FE7569");
+   pinImage = getColoredMarker("0088CC");
+   marker = new google.maps.Marker({
+      position: location,
+      map: map, 
+      title: "Hello World!",
+      icon: pinImage[0],
+      shadow: pinImage[1]
+   });
+   return marker;
+}
 
 function getLocation(){
    if (navigator.geolocation){
@@ -10,10 +42,12 @@ function getLocation(){
    }
 }
 function showPosition(position) {
-   $("#your-location").show();
+   $("#your-location").show("slow");
+   var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
    console.log("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
-   map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+   map.setCenter(loc);
    map.setZoom(10);
+   markers.me = addMarker(loc);
 }
 function positionError(err) {
    if(err.code == 1) {
@@ -23,9 +57,8 @@ function positionError(err) {
    }
 }
 
-
-
 function initMap(){
+   console.log("init");
    var mapOptions = {
       zoom: 2,
       center: new google.maps.LatLng(3.75, -145.72),

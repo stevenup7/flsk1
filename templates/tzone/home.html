@@ -6,23 +6,23 @@
 
 {% block content %}
 <div class="span8" id="content2">
-  <h2>{{ content }}</h2>
-  <div>
-    {{ content_body|safe }}
-  </div>
-  <div style="background-color: #08C; padding: 5px; color: white; font-weight: bold;" id="your-location" class="hide">
-    <i class="icon-white icon-chevron-right"></i>
-    You are here: 
-    <div class="btn-group">
-      <a class="btn btn-success btn-small">yes</a> | <a class="btn btn-warning btn-small">no</a>
+
+  <div id="your-location" class="hide well well-large">
+    <h3>Step 1:</h3>
+    <div>By our best guess you are here 
+      <div class="btn-group">
+	<a class="btn btn-success btn-small">yes I am</a> | <a class="btn btn-warning btn-small">no I'm not</a>
+      </div>
     </div>
   </div>
+
   <div id="map-canvas" style="height: 300px; width: 100%"></div>
 
 
 </div>
 <div class="span4" id="content1">
   <h2>My Contacts</h2>
+<p>You dont have any contacts loaded as yet</p>
 </div>
 {% endblock %}
 {% block optional_scripts %}
