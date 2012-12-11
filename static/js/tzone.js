@@ -19,14 +19,13 @@ function getColoredMarker(col){
    return [pinImage, pinShadow];
 }
 
-function addMarker(location) {
+function addMarker(location, color, title) {
    console.log("adding location");
-   pinImage = getColoredMarker("FE7569");
-   pinImage = getColoredMarker("0088CC");
+   pinImage = getColoredMarker(color);
    marker = new google.maps.Marker({
       position: location,
       map: map, 
-      title: "Hello World!",
+      title: title,
       icon: pinImage[0],
       shadow: pinImage[1]
    });
@@ -42,21 +41,16 @@ function getLocation(){
    }
 }
 function showPosition(position) {
-
-
    var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
    console.log("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
    map.setCenter(loc);
    map.setZoom(10);
-   markers.me = addMarker(loc);
+   markers.me = addMarker(loc, "0088CC", "My Location");
    console.log("adding");
-
    $("#your-location .btn-group .btn").click(function(){
       console.log("click");
-
       $("#stepCarousel").carousel('next');
       $("#stepCarousel .left").show();
-      //$("#stepCarousel").carousel('next');
       map.setZoom(1);
    });
 }
@@ -68,17 +62,50 @@ function positionError(err) {
    }
 }
 
+function addMyLocationFail(){
+   console.log("show error")
+   $("#map-message .heading").html("Error");
+   $("#map-message .message").html("No timezone information for this location");
+   $("#map-message").show()
+   setTimeout(function(){
+      $("#map-message").fadeOut("slow");
+   }, 5000);
+
+   $("#map-message .close").click(function(){$(this).parent().hide()});
+}
+
+function addMyLocation(lat, lng, tzone){   
+   console.log("adding a friend at ",  tzone);
+   pinImage = getColoredMarker();
+   var loc = new google.maps.LatLng(lat, lng);
+   $("#nofriends").hide();
+   markers.contacts.push( addMarker(loc, "FE7569", tzone.timezoneId));
+   console.log(markers)
+   $("#friendlist").append("<p id='friend"+ (markers.contacts.length - 1) +"'>friend at " + tzone.timezoneId  + "</br>" + tzone.time.split(" ")[1]+ "</p>");
+   $("#stepCarousel").carousel(2);
+}
+
+function getTimeZone(lat, lng, callBack, failCallBack){
+   var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + lat + '&lng=' + lng + "&callback=?";
+   $.getJSON(url, function(data) {
+      if(data["timezoneId"]){
+	 console.log(data);
+	 callBack(lat,lng, data);
+      } else {
+	 failCallBack()
+      }
+   });
+}
+
 function initMap(){
    console.log("init with carousel");
-   
-   
    $("#stepCarousel").carousel({
       interval: false
    });
-   
-
-
-
+   $("#stepCarousel #hide-help").click(function(){
+      // on the last screen should be able to dismiss help 
+      $(this).parents("#stepCarousel").hide();
+   });
    var mapOptions = {
       zoom: 2,
       center: new google.maps.LatLng(3.75, -145.72),
@@ -91,15 +118,7 @@ function initMap(){
 
    google.maps.event.addListener(map, 'click', function(event) {
       console.log("getting timezone");
-      var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + event.latLng.lat() + '&lng=' + event.latLng.lng() + "&callback=?";
-      $.getJSON(url, function(data) {
-         if(data["timezoneId"]){
-	    console.log(data);
-            addZone(data.timezoneId);
-         } else {
-            alert("no timezone available for this location");
-         }
-      });
+      getTimeZone(event.latLng.lat(),  event.latLng.lng(), addMyLocation, addMyLocationFail);
    });
 }
 

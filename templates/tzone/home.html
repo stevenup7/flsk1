@@ -25,6 +25,14 @@
 	  <p>Great, now click on the map to add some friends</p>
 	</div>
       </div>
+      <div class="item">
+	<div id="your-location" class="map-step well well-large">
+   	  <h3>Done:</h3>
+	  <p>Cool, now you have the hang of it :)</p>
+	  <a id="hide-help" class="btn btn-info btn-small">Hide Help</a>
+	</div>
+      </div>
+
     </div>
     <!-- Carousel nav -->
     <a class="carousel-control left hide" href="#stepCarousel" data-slide="prev">&lsaquo;</a>
@@ -33,12 +41,18 @@
 
 
   <div id="map-canvas" style="height: 300px; width: 100%"></div>
+  <div id="map-message" class="alert alert-error hide">
+    <button type="button" class="close">&times;</button>
+    <h4 class="heading"></h4>
+    <p class="message"></p>
+  </div>
 
-
+  
 </div>
 <div class="span4" id="content1">
   <h2>My Contacts</h2>
-  <p>You dont have any contacts loaded as yet</p>
+  <div id="friendlist"></div>
+  <p id="nofriends">You dont have any contacts loaded as yet</p>
 </div>
 {% endblock %}
 {% block optional_scripts %}
