@@ -36,7 +36,19 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     font-size: 1em;
 }
-#main-menu h1,
-#main-menu a{
+#main-menu a,
+#main-menu h1{
     color: white;
+}
+.map-step {
+    padding-left: 75px;
+    padding-right: 75px;
+    height: 100px;
+}
+#main-menu li{
+    color: white;
+    border-left: 1px solid white;
+}
+#main-menu li:first-child{
+    border-left-width: 0px;
 }

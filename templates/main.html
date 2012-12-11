@@ -19,9 +19,6 @@
     <div class="row-fluid">
       <div id="top" class="span12">
 	<div>
-	  {% if "SUPERUSER" in session["levels"] %}
-	  <a href="/users/admin">Admin Menu</a> | 
-	  {% endif %}
 	  {% if session["username"] %}
 	  {{ session["username"] }} | <a href="/users/logout">logout</a> 
 	  {% else %}
@@ -37,6 +34,9 @@
 	  <ul class="inline">
 	    <li><a href="/">home</a></li>
 	    <li><a href="/tzone/home">timezone</a></li>
+	    {% if "SUPERUSER" in session["levels"] %}
+	    <li><a href="/users/admin">admin menu</a></li> 
+	    {% endif %}
 	  </ul>
 	</div>
       </div>

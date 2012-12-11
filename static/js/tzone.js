@@ -42,12 +42,23 @@ function getLocation(){
    }
 }
 function showPosition(position) {
-   $("#your-location").show("slow");
+
+
    var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
    console.log("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
    map.setCenter(loc);
    map.setZoom(10);
    markers.me = addMarker(loc);
+   console.log("adding");
+
+   $("#your-location .btn-group .btn").click(function(){
+      console.log("click");
+
+      $("#stepCarousel").carousel('next');
+      $("#stepCarousel .left").show();
+      //$("#stepCarousel").carousel('next');
+      map.setZoom(1);
+   });
 }
 function positionError(err) {
    if(err.code == 1) {
@@ -58,7 +69,16 @@ function positionError(err) {
 }
 
 function initMap(){
-   console.log("init");
+   console.log("init with carousel");
+   
+   
+   $("#stepCarousel").carousel({
+      interval: false
+   });
+   
+
+
+
    var mapOptions = {
       zoom: 2,
       center: new google.maps.LatLng(3.75, -145.72),

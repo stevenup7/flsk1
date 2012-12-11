@@ -6,15 +6,31 @@
 
 {% block content %}
 <div class="span8" id="content2">
-
-  <div id="your-location" class="hide well well-large">
-    <h3>Step 1:</h3>
-    <div>By our best guess you are here 
-      <div class="btn-group">
-	<a class="btn btn-success btn-small">yes I am</a> | <a class="btn btn-warning btn-small">no I'm not</a>
+   
+  <div id="stepCarousel" class="carousel slide">
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+      <div class="active item">    
+	<div id="your-location" class="map-step well well-large">
+   	  <h3>Step 1:</h3>
+	  <p>Have a look at the map below, your computer has told us you are here:</p>
+	  <div class="btn-group">
+	    <a class="btn btn-success btn-small">yes I am</a> | <a class="btn btn-warning btn-small">no I'm not</a>
+	  </div>
+	</div>
+      </div>
+      <div class="item">
+	<div id="your-location" class="map-step well well-large">
+   	  <h3>Step 2:</h3>
+	  <p>Great, now click on the map to add some friends</p>
+	</div>
       </div>
     </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left hide" href="#stepCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right hide" href="#stepCarousel" data-slide="next">&rsaquo;</a>
   </div>
+
 
   <div id="map-canvas" style="height: 300px; width: 100%"></div>
 
@@ -22,27 +38,27 @@
 </div>
 <div class="span4" id="content1">
   <h2>My Contacts</h2>
-<p>You dont have any contacts loaded as yet</p>
+  <p>You dont have any contacts loaded as yet</p>
 </div>
 {% endblock %}
 {% block optional_scripts %}
-    <script id="tz-item" type="text/template">
-      <span><%= firstName %> <%= lastName %> in <%= tzone %></span>
-      <span class="change btn btn-mini">edit</span>
-    </script>
-    <script id="tz-item-form" type="text/template">
-      <h4>Edit <span><%= firstName %> <%= lastName %></span></h4>
-      <div><label>First Name</label><input type="text" class="firstName" name="firstName" value="<%= firstName %>" /></div>
-      <div><label>Last Name</label><input type="text" class="lastName" name="lastName" value="<%= lastName %>" /></div>
-      <div><input type="text" class="tzone" name="tzone" value="<%= tzone %>" /></div>
-      <div>
-	<button class="save-item btn btn-primary">save</button>
-	<% if(typeof(withdelete)==="undefined"?true:withdelete===true){ %>
-	<button class="delete-item btn btn-danger">delete</button>
-	<% } %>
-	<button class="cancel-item btn">cancel</button>
-      </div>
-    </script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
-    <script type="text/javascript" src="/static/js/tzone.js"></script>
+<script id="tz-item" type="text/template">
+  <span><%= firstName %> <%= lastName %> in <%= tzone %></span>
+  <span class="change btn btn-mini">edit</span>
+</script>
+<script id="tz-item-form" type="text/template">
+  <h4>Edit <span><%= firstName %> <%= lastName %></span></h4>
+  <div><label>First Name</label><input type="text" class="firstName" name="firstName" value="<%= firstName %>" /></div>
+  <div><label>Last Name</label><input type="text" class="lastName" name="lastName" value="<%= lastName %>" /></div>
+  <div><input type="text" class="tzone" name="tzone" value="<%= tzone %>" /></div>
+  <div>
+    <button class="save-item btn btn-primary">save</button>
+    <% if(typeof(withdelete)==="undefined"?true:withdelete===true){ %>
+    <button class="delete-item btn btn-danger">delete</button>
+    <% } %>
+    <button class="cancel-item btn">cancel</button>
+  </div>
+</script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
+<script type="text/javascript" src="/static/js/tzone.js"></script>
 {% endblock %}
