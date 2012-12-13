@@ -52,3 +52,12 @@ h1, h2, h3, h4, h5, h6 {
 #main-menu li:first-child{
     border-left-width: 0px;
 }
+
+#friendlist i {
+    margin-right: 5px;
+}
+#friendlist p {
+    padding: 5px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+}

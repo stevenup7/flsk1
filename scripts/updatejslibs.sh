@@ -11,3 +11,7 @@ cp bootstrap/img/glyphicons-halflings-white.png ../static/img/glyphicons-halflin
 cp bootstrap/img/glyphicons-halflings.png ../static/img/glyphicons-halflings.png 
 
 rm -rf bootstrap*
+
+wget http://d3js.org/d3.v2.min.js
+mv d3.v2.min.js ../static/js/d3.v2.min.js
+
