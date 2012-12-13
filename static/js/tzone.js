@@ -1,8 +1,17 @@
 var map;
+
 var markers = {
    me: undefined,
    contacts: []
 };
+
+function switchBounce(marker, bouncing) {
+   if (!bouncing) {
+      marker.setAnimation(null);
+   } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+   }
+}
 
 function getColoredMarker(col){
    var pinColor = col;
@@ -37,6 +46,7 @@ function getLocation(){
       var options = {timeout: 60000};
       navigator.geolocation.getCurrentPosition(showPosition, positionError, options);
    }else{
+      // TODO: make UI 
       console.log("Geolocation is not supported by this browser.");
    }
 }
@@ -56,13 +66,15 @@ function showPosition(position) {
 }
 function positionError(err) {
    if(err.code == 1) {
+      // TODO: make UI
       alert("Error: Access is denied!");
    }else if( err.code == 2) {
+      // TODO: make UI
       alert("Error: Position is unavailable!");
    }
 }
 
-function addMyLocationFail(){
+function addLocationFail(){
    console.log("show error")
    $("#map-message .heading").html("Error");
    $("#map-message .message").html("No timezone information for this location");
@@ -74,14 +86,37 @@ function addMyLocationFail(){
    $("#map-message .close").click(function(){$(this).parent().hide()});
 }
 
-function addMyLocation(lat, lng, tzone){   
+function addLocation(lat, lng, tzone){   
    console.log("adding a friend at ",  tzone);
    pinImage = getColoredMarker();
    var loc = new google.maps.LatLng(lat, lng);
    $("#nofriends").hide();
    markers.contacts.push( addMarker(loc, "FE7569", tzone.timezoneId));
    console.log(markers)
-   $("#friendlist").append("<p id='friend"+ (markers.contacts.length - 1) +"'>friend at " + tzone.timezoneId  + "</br>" + tzone.time.split(" ")[1]+ "</p>");
+   var id = "friend_" + (markers.contacts.length - 1);
+   var markerid = id.split("_")[1];
+   $("#friendlist").append(
+      "<p id='" + id + "'>" 
+	 + "friend at " + tzone.timezoneId 
+	 + '<button type="button" class="close">&times;</button>'
+	 + "</br>" + tzone.time  
+	 + "</p>"
+   );
+   $("#friendlist #" + id + " .close").click(function(){
+      var markerid = id.split("_")[1];
+      console.log(id, this);
+      markers.contacts[markerid].setMap(null);
+      $(this).parents("p").remove();
+   });
+   $("#friendlist #" + id).mouseover(function(){
+      $(this).css({"background-color": "#efefef"});
+      switchBounce(markers.contacts[markerid], true);
+   });
+   $("#friendlist #" + id).mouseout(function(){
+      $(this).css({"background-color": "white"});
+      switchBounce(markers.contacts[markerid], false);
+   });
+
    $("#stepCarousel").carousel(2);
 }
 
@@ -118,7 +153,7 @@ function initMap(){
 
    google.maps.event.addListener(map, 'click', function(event) {
       console.log("getting timezone");
-      getTimeZone(event.latLng.lat(),  event.latLng.lng(), addMyLocation, addMyLocationFail);
+      getTimeZone(event.latLng.lat(),  event.latLng.lng(), addLocation, addLocationFail);
    });
 }
 
