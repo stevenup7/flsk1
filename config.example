@@ -3,7 +3,7 @@ from pymongo import Connection
 appConfig = {
     'connection':            None,
     'friends':               None, # will contain the friends collections
-    'secret_key':            ''
+    'secret_key':            '',
     'salt':                  '', #    #salt = uuid.uuid4().hex
     'google_api_key':        '', # TODO: replace stevens api key
     'geonames_api_username': '',
