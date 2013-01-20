@@ -116,7 +116,7 @@ def logout():
     return redirect(url_for('index'))
 
 @mod.route('/install')
-def logout():
+def install():
     users = g.db.users.find()
     print users.count()
     if users.count() == 0: 
