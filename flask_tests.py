@@ -24,14 +24,34 @@ class tzoneTestCase(unittest.TestCase):
     	db = getConnection()
         deleteMongoDocument(db.users, self.entry['id'])
 
+    def login(self, username, password):
+        return self.app.post('/users/login', data=dict(
+            username=username,
+            password=password
+        ), follow_redirects=True)
+
+    def logout(self):
+        return self.app.get('/users/logout', 
+        	follow_redirects=True)
+
     def test_home_exists(self):
     	rv = self.app.get('/')
-    	#print dir(rv)
     	assert rv.status_code == 200
 
     def test_tzonehome_exists(self):
     	rv = self.app.get('/tzone/home')
     	assert rv.status_code == 200
+
+    def test_failed_login(self):
+    	rv = self.login('testUser', 'badPassword')
+    	assert 'Invalid username or password' in rv.data 
+
+    def test_login_and_logout(self):
+        rv = self.login('testUser', 'test')
+        assert 'Invalid username or password' not in rv.data
+        rv = self.logout()
+        assert 'Logout successful' in rv.data
+
 
 if __name__ == '__main__':
     unittest.main()
