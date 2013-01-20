@@ -115,3 +115,19 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
+@mod.route('/install')
+def logout():
+    users = g.db.users.find()
+    print users.count()
+    if users.count() == 0: 
+        newUser = {
+            "username": "admin",
+            "levels": ["SUPERUSER"],
+            "passwordhashed": hashPass('admin')            
+            }
+        createDocument(g.db.users, newUser)       
+        return "created admin/admin"
+    else:
+        return "users already"
+
+
