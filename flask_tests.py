@@ -52,6 +52,14 @@ class tzoneTestCase(unittest.TestCase):
         rv = self.logout()
         assert 'Logout successful' in rv.data
 
+    def test_user_list(self):
+    	rv = self.login('testUser', 'test')
+    	rv = self.app.get('/users/admin', 
+            follow_redirects=True)
+        assert 'User List' in rv.data
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
