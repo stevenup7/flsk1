@@ -45,11 +45,16 @@ def hashPass(password):
     salt = appConfig["salt"]
     return hashlib.sha512(password + salt).hexdigest()
 
-# some generic wrapper functions to get json into mongo CrUD
-def createDocument(db, json):
+# creates a mongo document 
+def createMongoDocument(db, json):
     oid = db.insert(json)
     entry = db.find_one({'_id': ObjectId(oid)})
     entry['id'] = str(entry['_id'])
+    return entry
+
+# some generic wrapper functions to get json into mongo CrUD
+def createDocument(db, json):
+    entry = createMongoDocument(db, json);
     # if a logged in user then put the uid in (owner of the docuemnt)
     if "uid" in session: 
         entry['uid'] = session['uid']
@@ -67,7 +72,11 @@ def updateDocumnet(db, entryid, json):
     del entry['_id']
     return makeJSONResponse(entry)
 
-def deleteDocument(db, entryid):
+def deleteMongoDocument(db, entryid):
     entry = db.remove({'_id': ObjectId(entryid)})
+    return entry
+
+def deleteDocument(db, entryid):
+    entry = deleteMongoDocument(db, entryid)
     return makeJSONResponse({"message": "done"})
 

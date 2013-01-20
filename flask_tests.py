@@ -2,19 +2,27 @@ import os
 import app
 import unittest
 import tempfile
+from flask import g
+from utils import *
+import functools
+from config import getConnection
 
 class tzoneTestCase(unittest.TestCase):
 
+
     def setUp(self):
-        # self.db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
-        # app.app.config['TESTING'] = True
         self.app = app.app.test_client()
-        # app.init_db()
+        db = getConnection()
+        newUser = {
+            "username": "testUser",
+            "levels": ["SUPERUSER"],
+            "passwordhashed": hashPass('test')        
+            }
+        self.entry = createMongoDocument(db.users, newUser)  
 
     def tearDown(self):
-        # os.close(self.db_fd)
-        # os.unlink(app.app.config['DATABASE'])
-        pass
+    	db = getConnection()
+        deleteMongoDocument(db.users, self.entry['id'])
 
     def test_home_exists(self):
     	rv = self.app.get('/')
