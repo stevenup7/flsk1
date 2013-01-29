@@ -56,6 +56,8 @@
   <p id="nofriends">You dont have any contacts loaded as yet</p>
 </div>
 {% endblock %}
+
+
 {% block optional_scripts %}
 <script id="tz-item" type="text/template">
   <span><%= firstName %> <%= lastName %> in <%= tzone %></span>
@@ -76,4 +78,5 @@
 </script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
 <script type="text/javascript" src="/static/js/tzone.js"></script>
+<script type="text/javascript" src="/static/js/map.js"></script>
 {% endblock %}
