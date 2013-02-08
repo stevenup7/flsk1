@@ -203,7 +203,7 @@ var GeneralListView = Backbone.View.extend({
    addItem: function(){
       console.log("list view" , this);
       var i = new this.model();
-      var i = this.addForm.loadModel(i);
+      i = this.addForm.loadModel(i);
       this.collection.add(i);
       i.save();
       this.render();

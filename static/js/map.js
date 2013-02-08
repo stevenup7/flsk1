@@ -15,11 +15,17 @@ var GoogleMapHandler = Backbone.View.extend({
 	this.infowindow = new google.maps.InfoWindow();
 	this.geocoder = new google.maps.Geocoder();
 	this.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-	this.isMapInit = true;
-	
+	this.isMapInit = true;	
 	console.log("map obj init");
+	return this;
     },    
-
+    setZoom: function(zoom){
+	this.map.setZoom(zoom);
+    },
+    setCenter: function(location){
+	this.map.panTo(location);
+	return this;
+    },
     getColoredMarker: function(col){
 	var pinColor = col;
 	var pinImage = new google.maps.MarkerImage(
@@ -35,13 +41,22 @@ var GoogleMapHandler = Backbone.View.extend({
 	    new google.maps.Point(12, 35));
 	return [pinImage, pinShadow];
     }, 
-
-    addMarker: function(location, color, title) {
-	console.log("adding location");
-	pinImage = getColoredMarker(color);
+    onClick: function(object, method){
+	google.maps.event.addListener(this.map, 'click', function(e){
+	    ///loc = [e.latLng.lat(), e.latLng.lng()];
+	    method.call(object, e);
+	});
+    },
+    addMarker: function(location, color, title) {	
+	if(location.constructor.toString().indexOf("Geoposition") > 0){
+	    console.log("converting" , location.coords.latitude, location.coords.longitude);
+    	    location = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+	}
+	console.log("adding location", location, typeof location, location.constructor);
+	pinImage = this.getColoredMarker(color);
 	marker = new google.maps.Marker({
 	    position: location,
-	    map: map, 
+	    map: this.map, 
 	    title: title,
 	    icon: pinImage[0],
 	    shadow: pinImage[1]
@@ -57,5 +72,4 @@ var GoogleMapHandler = Backbone.View.extend({
 	}
     }
 
-
-})
+});

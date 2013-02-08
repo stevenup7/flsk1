@@ -54,6 +54,7 @@ def hashifyPassword(json):
     json["passwordhashed"] = hashPass(json["password"])
     del json["password"]
 
+
 @mod.route('/admin/data', methods=['GET'])
 @login_required('SUPERUSER')
 def userList():
@@ -67,7 +68,6 @@ def createUser():
     json = request.json
     hashifyPassword(json)
     return createDocument(g.db.users, json)
-
 
 # update 
 @mod.route('/admin/data/<entryid>', methods=['PUT'])
