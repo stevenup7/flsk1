@@ -22,7 +22,8 @@ $(document).ready(function () {
 	rendered: false,
 	isInCalendar: false, // has this model been added into the 'calendar table'
 	edittemplate: _.template('<input type="text" value="<%=firstName%>"class="firstName" ><input type="text" value="<%=lastName%>"class="lastName" >'),
-	texttemplate: _.template('<div class="contact-name"><%=firstName%> <%=lastName%></div><div><%=timezoneid%></div>'),
+	texttemplate: _.template('<div class="contact-name"><%=firstName%> <%=lastName%></div><div>' + 
+				 '<% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %></div>'),
 	events: {
 	    "blur input": "change",
 	    "click .edit": "toggleEdit",
@@ -174,7 +175,7 @@ $(document).ready(function () {
 		    if(data["timezoneId"]){
 			i.set("timezoneid", data["timezoneId"]);
 		    } else {
-			alert("no zone");
+			i.set("timezoneid", "timezone unavailable");
 		    }
 		});    
 	    }
