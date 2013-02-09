@@ -1,6 +1,8 @@
 from flask import Blueprint, request, render_template, flash, g, session, redirect, url_for
 from functools import wraps
 from utils import *
+import pytz
+from datetime import datetime
 
 from users.views import login_required
 
@@ -19,16 +21,29 @@ def tzone(entryid=None):
     if entryid == None:
         data = []
         for f in g.db.friends.find():
+            insertUTCOffset(f)
             f["id"] = str(f["_id"])
             del f["_id"]
             data.append(f)
         return makeJSONResponse(data)
     else:
         f = g.db.friends.find_one({'_id': ObjectId(entryid)})
+        insertUTCOffset(f)
         f["id"] = str(f["_id"])
         del f["_id"]
         print f
         return makeJSONResponse(f)
+
+def insertUTCOffset(person):
+    person["UTCOffset"] = getUTCOffset(person["timezoneid"])
+
+def getUTCOffset(tzName):
+    return datetime.now(pytz.timezone(tzName)).strftime('%z')
+	
+def removeUTCOffset(person):
+    if "UTCOffset" in person:
+        del person["UTCOffset"]
+	
 
 # create
 @mod.route('/', methods=['POST'])
@@ -40,7 +55,7 @@ def createTZoneEntry():
 @mod.route('/<entryid>', methods=['PUT'])
 @login_required()
 def updateTZoneEntry(entryid):
-    return updateDocumnet(g.db.friends, entryid, request.json)
+    return updateDocumnet(g.db.friends, entryid, removeUTCOffset(request.json))
 
 # delete
 @mod.route('/<entryid>', methods=['DELETE'])
