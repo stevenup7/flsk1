@@ -40,7 +40,9 @@ $(document).ready(function () {
 				 '<% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %></div>'),
 	events: {
 	    "blur input": "change",
+        "keyup input": "keyUp",
 	    "click .edit": "toggleEdit",
+        "click .contact-name": "toggleEdit",
 	    "click .icon-trash": "delete",
 	    "click .icon-calendar": "inCalendar",
 	    
@@ -71,6 +73,14 @@ $(document).ready(function () {
 		"lastName" : this.$el.find(".lastName" ).val()
 	    });
 	},
+    keyUp: function(e) {
+        console.log(e);
+        if(e.which === 13) {
+            this.change();
+            this.edit = false;
+            this.render();
+        } // end if
+    },
 	toggleEdit: function(){
 	    this.gmap.setZoom(6);
 	    this.gmap.setCenter(this.marker.getPosition());
