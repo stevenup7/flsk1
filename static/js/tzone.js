@@ -4,8 +4,15 @@ $(document).ready(function () {
     var TZoneApp = {};
     TZoneApp.TZoneContact = Backbone.Model.extend({
 	initialize: function (){
+	    _.bindAll(this, "removeContact");
 	    this.bind("change", this.haschanged);
+	    this.bind("remove", this.removeContact);
 	},
+	removeContact: function(){
+	    console.log("this", this);
+	    this.destroy();
+	},
+	// TODO: validation
 	haschanged: function(){
 	    if(window.username !== undefined){
 		this.set({"owner": window.username});
@@ -27,7 +34,20 @@ $(document).ready(function () {
 	events: {
 	    "blur input": "change",
 	    "click .edit": "toggleEdit",
-	    "click .icon-calendar": "inCalendar"
+	    "click .icon-trash": "delete",
+	    "click .icon-calendar": "inCalendar",
+	    
+	},
+	delete: function(){
+	    if(confirm("Are you sure")){
+		this.model.collection.remove(this.model);
+		console.log("deleting", this);
+		// TODO : check that this is enough
+		// http://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js
+		this.marker.setMap(null);
+		this.remove();
+	    }
+
 	},
 	initialize: function(){
 	    this.gmap = this.options.gmap;
@@ -72,7 +92,7 @@ $(document).ready(function () {
 	},
 	render: function(){
 	    if(this.edit){
-		this.$el.html(this.edittemplate(this.model.toJSON()) + " <i class='edit icon-list'></i>");
+		this.$el.html(this.edittemplate(this.model.toJSON()) + " <i class='edit icon-list'></i> <i class='icon-trash'></i>");
 	    } else {
 		this.$el.html(this.texttemplate(this.model.toJSON()) + " <i class='edit icon-edit'></i> <i class='icon icon-calendar'></i>");
 	    }
