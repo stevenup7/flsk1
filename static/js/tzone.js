@@ -89,6 +89,26 @@ $(document).ready(function () {
 	    return this;
 	}
     })
+
+    TZoneApp.TZoneTimesView = Backbone.View.extend({
+	tagName: "div",
+	className: "times-view",
+	initialize: function (){
+	    this.contactView = this.options.contactView;
+
+	},
+	render: function() {
+	    console.log("rendering");
+	    console.log("cv", this.contactView);
+	    this.$el.html(
+		this.contactView.texttemplate(this.model.toJSON())
+	    );
+	    this.options.container.append(this.el);
+	}
+	
+
+    });
+
     TZoneApp.TZoneContactList = Backbone.Collection.extend({
 	model: TZoneApp.TZoneContact,
 	url: "/tzone/",
@@ -141,6 +161,11 @@ $(document).ready(function () {
 	},
 	addToCalendar: function(model, modelview){
 	    console.log("in calendar", model.toJSON(), modelview);
+	    var listView = new TZoneApp.TZoneTimesView({
+		container: $("#times-wrapper"),
+		contactView: modelview,
+		model: model
+	    }).render();
 	},
 	addModelView: function(i){
 	    new TZoneApp.TZoneContactView(
