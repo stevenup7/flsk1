@@ -184,7 +184,7 @@ $(document).ready(function () {
 	getUserLocation: function(){
 	    var that = this;
 	    // Get the users locations
-	    u = new UserGeoLocation({		
+	    var u = new UserGeoLocation({		
 		success: function(pos){
 		    that.userLocationSuccess(pos);
 		},
