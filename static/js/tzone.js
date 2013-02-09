@@ -1,9 +1,7 @@
 'use strict';
 
 $(document).ready(function () {
-
     var TZoneApp = {};
-
     TZoneApp.TZoneContact = Backbone.Model.extend({
 	initialize: function (){
 	    this.bind("change", this.haschanged);
@@ -24,7 +22,7 @@ $(document).ready(function () {
 	rendered: false,
 	isInCalendar: false, // has this model been added into the 'calendar table'
 	edittemplate: _.template('<input type="text" value="<%=firstName%>"class="firstName" ><input type="text" value="<%=lastName%>"class="lastName" >'),
-	texttemplate: _.template('<%=firstName%> <%=lastName%> '),
+	texttemplate: _.template('<div class="contact-name"><%=firstName%> <%=lastName%></div><div><%=timezoneid%></div>'),
 	events: {
 	    "blur input": "change",
 	    "click .edit": "toggleEdit",
@@ -101,12 +99,10 @@ $(document).ready(function () {
 	    console.log("rendering");
 	    console.log("cv", this.contactView);
 	    this.$el.html(
-		this.contactView.texttemplate(this.model.toJSON())
+		"<h2>" + this.contactView.texttemplate(this.model.toJSON()) + "</h2>"
 	    );
 	    this.options.container.append(this.el);
-	}
-	
-
+	}	
     });
 
     TZoneApp.TZoneContactList = Backbone.Collection.extend({
@@ -168,6 +164,22 @@ $(document).ready(function () {
 	    }).render();
 	},
 	addModelView: function(i){
+	    console.log("adding model", i.get('timezoneid'));
+
+	    if(i.get('timezoneid') === undefined){
+		var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + i.get("lat") + '&lng=' + i.get("lng") + "&callback=?";
+		console.log(url);
+
+		$.getJSON(url, function(data) {
+		    if(data["timezoneId"]){
+			i.set("timezoneid", data["timezoneId"]);
+		    } else {
+			alert("no zone");
+		    }
+		});    
+	    }
+
+
 	    new TZoneApp.TZoneContactView(
 		{model:i,
 		 gmap: this.gmap,
@@ -183,6 +195,7 @@ $(document).ready(function () {
 		"lat":       loc.lat(),
 		"lng":       loc.lng()
 	    });
+	    
 	    this.collection.add(i);
 	    this.addModelView(i);
 	    this.render();
@@ -226,16 +239,6 @@ $(document).ready(function () {
 	userLocationFail: function(msg){
 	    // todo fix this 
 	    console.log("bad", msg);
-	},
-	getTimeZone: function(lat, lng, callBack, failCallBack){
-	    var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + lat + '&lng=' + lng + "&callback=?";
-	    $.getJSON(url, function(data) {
-		if(data["timezoneId"]){
-		    callBack(lat,lng, data);
-		} else {
-		    failCallBack()
-		}
-	    });
 	},
     });
     TZoneApp.app = new TZoneApp.TZoneApp();
