@@ -1,9 +1,11 @@
-$(document).ready(function(){
+'use strict';
+
+$(document).ready(function () {
 
     var TZoneApp = {};
 
     TZoneApp.TZoneContact = Backbone.Model.extend({
-	initialize: function(){
+	initialize: function (){
 	    this.bind("change", this.haschanged);
 	},
 	haschanged: function(){

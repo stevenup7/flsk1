@@ -11,7 +11,7 @@ mod = Blueprint('tzone', __name__, url_prefix='/tzone')
 def home():
     return {"google_api_key": g.appConfig['google_api_key'], "content" : "home", "content_body" : "body "}
 
-#get 
+#get  
 @mod.route('/', methods=['GET'])
 @mod.route('/<entryid>', methods=['GET'])
 @login_required()
