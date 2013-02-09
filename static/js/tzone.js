@@ -3,6 +3,13 @@
 $(document).ready(function () {
     var TZoneApp = {};
     TZoneApp.TZoneContact = Backbone.Model.extend({
+	defauts:{
+	    "firstName": "new",
+	    "lastName":  "contact",
+	    "lat":       90, // all good walrus live at the north pole
+	    "lng":       0,
+	    "timzoneid": undefined
+	},
 	initialize: function (){
 	    _.bindAll(this, "removeContact");
 	    this.bind("change", this.haschanged);
@@ -50,8 +57,7 @@ $(document).ready(function () {
 
 	},
 	initialize: function(){
-	    this.gmap = this.options.gmap;
-	    
+	    this.gmap = this.options.gmap;	    
 	    this.model.on("change", this.render, this);
 	    // when either the model or the collections asks remove from the DOM
 	    this.model.on("dom-remove", this.domRemove, this);
@@ -158,6 +164,7 @@ $(document).ready(function () {
 	},
 	loadDone: function(){
 	    _.each(this.collection.models, function(i){
+		// TODO models with no location
 		this.addModelView(i);
 	    }, this);
 	    this.render();
@@ -186,7 +193,6 @@ $(document).ready(function () {
 	},
 	addModelView: function(i){
 	    console.log("adding model", i.get('timezoneid'));
-
 	    if(i.get('timezoneid') === undefined){
 		var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + i.get("lat") + '&lng=' + i.get("lng") + "&callback=?";
 		console.log(url);
@@ -199,7 +205,6 @@ $(document).ready(function () {
 		    }
 		});    
 	    }
-
 
 	    new TZoneApp.TZoneContactView(
 		{model:i,
