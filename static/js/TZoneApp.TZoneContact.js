@@ -10,8 +10,7 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 	_.bindAll(this, "removeContact");
 	this.bind("change", this.haschanged);
 	this.bind("remove", this.removeContact);
-
-        this.bind("invalid", this.parseError);
+        this.on("invalid", this.parseError);
 
 	if(this.get("UTCOffset") !== undefined){
 	    var os = this.get("UTCOffset"); // something like "-0130"
@@ -33,16 +32,16 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 	return tzonedate;
     },
     
-    validate: function ( ) {
-        return "testing";
-    },
-    
+    validate: function ( attrs, options) {
+	console.log("Validate running " );
+	console.log("   ", attrs);
+	console.log("   ", options);
+        return "bad bad all bad";
+    },    
     parseError: function(model, error){
         console.log("parseError is getting called");
         // console.log(error);
-    },
-    
-    
+    },    
     removeContact: function(){
 	// console.log("this", this);
 	this.destroy();
