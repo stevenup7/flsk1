@@ -14,9 +14,21 @@ $(document).ready(function () {
 	    _.bindAll(this, "removeContact");
 	    this.bind("change", this.haschanged);
 	    this.bind("remove", this.removeContact);
+        this.bind("invalid", this.parseError);
 	},
+    
+    validate: function ( ) {
+        return "testing";
+    },
+    
+    parseError: function(model, error){
+        console.log("parseError is getting called");
+        // console.log(error);
+    },
+    
+    
 	removeContact: function(){
-	    console.log("this", this);
+	    // console.log("this", this);
 	    this.destroy();
 	},
 	// TODO: validation
@@ -50,7 +62,7 @@ $(document).ready(function () {
 	delete: function(){
 	    if(confirm("Are you sure")){
 		this.model.collection.remove(this.model);
-		console.log("deleting", this);
+		// console.log("deleting", this);
 		// TODO : check that this is enough
 		// http://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js
 		this.marker.setMap(null);
@@ -74,7 +86,7 @@ $(document).ready(function () {
 	    });
 	},
     keyUp: function(e) {
-        console.log(e);
+        // console.log(e);
         if(e.which === 13) {
             this.change();
             this.edit = false;
@@ -89,11 +101,11 @@ $(document).ready(function () {
 	}, 
 	domRemove: function(){
 	    // remove the element from the dom
-	    console.log("domRem", this.texttemplate(this.model.toJSON()));
+	    // console.log("domRem", this.texttemplate(this.model.toJSON()));
 	    this.$el.detach();
 	},
 	domInsert: function(){
-	    console.log("domIns", this.texttemplate(this.model.toJSON()));
+	    // console.log("domIns", this.texttemplate(this.model.toJSON()));
 	    if(this.$el.parent().length === 0){
 		this.options.container.append(this.el);
 	    }
@@ -133,7 +145,7 @@ $(document).ready(function () {
 
 	},
 	render: function() {
-	    console.log("rendering");
+	    // console.log("rendering");
 	    console.log("cv", this.contactView);
 	    this.$el.html(
 		"<h2>" + this.contactView.texttemplate(this.model.toJSON()) + "</h2>"
@@ -194,7 +206,7 @@ $(document).ready(function () {
 	    
 	},
 	addToCalendar: function(model, modelview){
-	    console.log("in calendar", model.toJSON(), modelview);
+	    // console.log("in calendar", model.toJSON(), modelview);
 	    var listView = new TZoneApp.TZoneTimesView({
 		container: $("#times-wrapper"),
 		contactView: modelview,
@@ -202,10 +214,10 @@ $(document).ready(function () {
 	    }).render();
 	},
 	addModelView: function(i){
-	    console.log("adding model", i.get('timezoneid'));
+	    // console.log("adding model", i.get('timezoneid'));
 	    if(i.get('timezoneid') === undefined){
 		var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + i.get("lat") + '&lng=' + i.get("lng") + "&callback=?";
-		console.log(url);
+		// console.log(url);
 
 		$.getJSON(url, function(data) {
 		    if(data["timezoneId"]){
