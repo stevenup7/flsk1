@@ -38,19 +38,22 @@ def insertUTCOffset(person):
     person["UTCOffset"] = getUTCOffset(person["timezoneid"])
 
 def getUTCOffset(tzName):
-    return datetime.now(pytz.timezone(tzName)).strftime('%z')
-	
+    try:
+        return datetime.now(pytz.timezone(tzName)).strftime('%z')
+    except pytz.UnknownTimeZoneError:
+        return "0000"
+
 def removeUTCOffset(person):
     if "UTCOffset" in person:
         del person["UTCOffset"]
+    return person
 	
-
 # create
 @mod.route('/', methods=['POST'])
 @login_required()
 def createTZoneEntry():
     return createDocument(g.db.friends, request.json)
-    
+
 # update 
 @mod.route('/<entryid>', methods=['PUT'])
 @login_required()

@@ -62,6 +62,7 @@ def createDocument(db, json):
     return makeJSONResponse(entry)
 
 def updateDocumnet(db, entryid, json):
+    print json
     json['uid'] = session['uid']
     db.update({'_id': ObjectId(entryid)}, {'$set': json})
     entry = db.find_one({'_id': ObjectId(entryid)})

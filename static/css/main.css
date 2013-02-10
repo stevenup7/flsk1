@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #content2 {
-    background: red;
+    --background: red;
 }
 
 #stepCarousel {
@@ -78,6 +78,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid red;
 }
 .times-view h2{
+    line-height: 12px;
     width: 140px;
     height: 20px;
     overflow: hidden;
