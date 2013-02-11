@@ -22,7 +22,7 @@ $(document).ready(function () {
 	    });
 	},
 	mapClicked: function(loc){
-	    this.contacts.addItem(loc.latLng);
+	    this.contacts.addItem(loc.latLng, "new", "contacts", false);
 	},
 	getUserLocation: function(){
 	    var that = this;

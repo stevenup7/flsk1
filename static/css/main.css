@@ -75,16 +75,28 @@ h1, h2, h3, h4, h5, h6 {
 .times-view{
     width: 150px; 
     float: left;
-    border: 1px solid red;
+    border: 2px solid white;
+    background-color: #efefef;
 }
-.times-view h2{
-    line-height: 12px;
+.times-view h2,
+.times-view .clock{
+    line-height: 14px;
     width: 140px;
-    height: 20px;
+    height: 24px;
     overflow: hidden;
     font-size: 12px;
     color: white;
     background-color: #666;
     margin: 0;
     padding: 5px;
+}
+
+.night {
+    background-color: #888;
+}
+.day {
+    background-color: #fffbcc;
+}
+.work {
+    background-color: #ccf1ff;
 }

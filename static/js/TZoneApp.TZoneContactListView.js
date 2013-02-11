@@ -74,12 +74,13 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 
     },
     addItem: function(loc, firstName, lastName, isUser){
-	var isUser = this.collection.filter(function(contact){
+	var userCount = this.collection.filter(function(contact){
 	    return contact.get("isUser")
 	});
-
-	if(isUser.length > 0){
-	    console.log(isUser);
+	
+	if(userCount.length > 0 && isUser === true){
+	    // TODO: offer to update location
+	    console.log("found location alredy for the user" , isUser);
 	    return;
 	}
 	console.log("about to create");
