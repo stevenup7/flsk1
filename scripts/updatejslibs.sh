@@ -15,3 +15,8 @@ rm -rf bootstrap*
 wget http://d3js.org/d3.v2.min.js
 mv d3.v2.min.js ../static/js/d3.v2.min.js
 
+wget http://backbonejs.org/backbone-min.js
+mv backbone-min.js ../static/js/backbone-min.js
+
+wget http://underscorejs.org/underscore-min.js
+mv underscore-min.js ../static/js/underscore.js

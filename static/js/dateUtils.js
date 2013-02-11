@@ -83,6 +83,10 @@ function DatePlus(dt, settings){
     return this;
 }
 
+DatePlus.prototype.setDate = function(d){
+    this.dt = d;
+}
+
 DatePlus.prototype.monthList = {
     "en": ['January','February','March','April','May','June','July','August','September','October','November','December'],
     "fr": ['Janvier','Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre']
@@ -162,6 +166,7 @@ DatePlus.prototype.setFormat = function(fmt){
     this.settings.format = fmt;
     return this;
 }
+
 
 DatePlus.prototype.firstDayInMonthsAgo = function(numMonthsAgo) {
     d = new DatePlus(new Date(this.dt.getFullYear(), this.dt.getMonth() - numMonthsAgo, 1));

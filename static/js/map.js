@@ -16,7 +16,6 @@ var GoogleMapHandler = Backbone.View.extend({
 	this.geocoder = new google.maps.Geocoder();
 	this.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	this.isMapInit = true;	
-	console.log("map obj init");
 	return this;
     },    
     setZoom: function(zoom){
@@ -47,19 +46,24 @@ var GoogleMapHandler = Backbone.View.extend({
 	    method.call(object, e);
 	});
     },
-    addMarker: function(location, color, title) {	
+    addMarker: function(location, color, title, owner) {	
 	if(location.constructor.toString().indexOf("Geoposition") > 0){
 	    console.log("converting" , location.coords.latitude, location.coords.longitude);
-    	    location = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+    	    var location = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
 	}
-	console.log("adding location", location, typeof location, location.constructor);
+	//console.log("adding location", location, typeof location, location.constructor);
 	pinImage = this.getColoredMarker(color);
 	marker = new google.maps.Marker({
 	    position: location,
 	    map: this.map, 
 	    title: title,
 	    icon: pinImage[0],
-	    shadow: pinImage[1]
+	    shadow: pinImage[1],
+	    draggable: false
+	});
+	google.maps.event.addListener(marker, 'dragend', function(){
+	    console.log("dragggednd", owner);
+	    owner.trigger("markerDragEnd", marker.location);
 	});
 	return marker;
     },

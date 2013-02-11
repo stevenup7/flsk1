@@ -13,6 +13,14 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	window.c = this.collection;
 	this.collection.bind('load-done', this.loadDone);
 	this.collection.on("in-calendar", this.addToCalendar, this);
+	that = this;
+	(function(){
+	    console.log("test");
+	    that.tickInterval = window.setInterval(function(){
+		that.trigger("tick")
+	    },1000);
+	})()
+
     },
     loadDone: function(){
 	_.each(this.collection.models, function(i){
@@ -40,7 +48,8 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	var listView = new TZoneApp.TZoneTimesView({
 	    container: $("#times-wrapper"),
 	    contactView: modelview,
-	    model: model
+	    model: model,
+	    listview: this
 	}).render();
     },
     addModelView: function(i){
@@ -57,26 +66,39 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 		}
 	    });    
 	}
-
 	new TZoneApp.TZoneContactView(
 	    {model:i,
-	     gmap: this.gmap,
+	     listview: this,
 	     container: this.$el.find("ul")
 	    }).render();
 
     },
-    addItem: function(loc){
+    addItem: function(loc, firstName, lastName, isUser){
+	var isUser = this.collection.filter(function(contact){
+	    return contact.get("isUser")
+	});
+
+	if(isUser.length > 0){
+	    console.log(isUser);
+	    return;
+	}
+	console.log("about to create");
 	var i = new TZoneApp.TZoneContact();
+	console.log("adding to collection");
+	this.collection.add(i);
+	console.log("obj created");
 	i.set({
-	    "firstName": "new",
-	    "lastName":  "contact",
+	    "firstName": firstName || "new",
+	    "lastName":  lastName  || "contact",
+	    "isUser":    isUser    || false,
 	    "lat":       loc.lat(),
 	    "lng":       loc.lng()
 	});
-	
-	this.collection.add(i);
+	console.log("nc" , i.toJSON());
+
 	this.addModelView(i);
 	this.render();
+	return this; // Allow Chaining  TODO: should this return the model 
     }
 
 })

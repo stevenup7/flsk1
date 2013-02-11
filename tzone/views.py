@@ -35,7 +35,8 @@ def tzone(entryid=None):
         return makeJSONResponse(f)
 
 def insertUTCOffset(person):
-    person["UTCOffset"] = getUTCOffset(person["timezoneid"])
+    if "timezoneid" in person:
+        person["UTCOffset"] = getUTCOffset(person["timezoneid"])
 
 def getUTCOffset(tzName):
     try:

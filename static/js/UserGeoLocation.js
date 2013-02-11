@@ -6,7 +6,7 @@ UserGeoLocation.prototype.showUserPosition = function (position) {
     getTimeZone(position.coords.latitude, position.coords.longitude, showUserTimeZone, showUserTimeZoneFail);
 }
 UserGeoLocation.prototype.getUserGeoLocation = function(){
-    console.log(this, "getting user location");
+//    console.log(this, "getting user location");
     if (navigator.geolocation){
 	var options = {timeout: 60000};
 	var that = this;
