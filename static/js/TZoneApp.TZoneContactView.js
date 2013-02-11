@@ -42,13 +42,15 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	});
     },
     changeLocation: function(loc){
+	// TODO: update the timezone as well
 	this.model.set({
 	    "lat": this.marker.position.lat(), 
 	    "lng": this.marker.position.lng()
 	});
+	this.model.fetchTimeZone();
     },
     keyUp: function(e) {
-	// TODO: if tabbign off last field tab to first
+	// TODO: if tabbing off last field tab to first
         // console.log(e);
         if(e.which === 13) {
 	    this.change();

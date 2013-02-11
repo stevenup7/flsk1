@@ -55,16 +55,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
     addModelView: function(i){
 	// console.log("adding model", i.get('timezoneid'));
 	if(i.get('timezoneid') === undefined){
-	    var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' + i.get("lat") + '&lng=' + i.get("lng") + "&callback=?";
-	    // console.log(url);
-
-	    $.getJSON(url, function(data) {
-		if(data["timezoneId"]){
-		    i.set("timezoneid", data["timezoneId"]);
-		} else {
-		    i.set("timezoneid", "timezone unavailable");
-		}
-	    });    
+	    i.fetchTimeZone();
 	}
 	new TZoneApp.TZoneContactView(
 	    {model:i,

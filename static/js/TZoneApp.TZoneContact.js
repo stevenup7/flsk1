@@ -60,5 +60,18 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 		this.save();
 	    }
 	}
+    },
+    fetchTimeZone: function() {
+	var url = 'http://api.geonames.org/timezoneJSON?username=stevenup7&lat=' 
+	    + this.get("lat") + '&lng=' + this.get("lng") + "&callback=?";
+	console.log(url);
+	var self = this;
+	$.getJSON(url, function(data) {
+	    if(data["timezoneId"]){
+		self.set("timezoneid", data["timezoneId"]);
+	    } else {
+		self.set("timezoneid", "timezone unavailable");
+	    }
+	});    
     }
 });
