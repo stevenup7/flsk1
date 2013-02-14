@@ -6,7 +6,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
     },
     initialize: function(){
 	$(this.options.container).append(this.el);
-	this.$el.append("<ul class='list-container'></ul><span class='reverse'>reverse</span>");
+	this.$el.append("<ul class='list-container unstyled'></ul><span class='reverse'>reverse</span>");
 	this.gmap = this.options.gmap;
 	_.bindAll(this, "render", "addItem", "loadDone");
 	this.collection = new TZoneApp.TZoneContactList();

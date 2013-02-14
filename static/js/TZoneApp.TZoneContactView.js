@@ -15,16 +15,6 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	"click .icon-trash": "delete",
 	"click .icon-calendar": "inCalendar",
     },
-    delete: function(){
-	if(confirm("Are you sure")){
-	    this.model.collection.remove(this.model);
-	    // console.log("deleting", this);
-	    // TODO : check that this is enough
-	    // http://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js
-	    this.marker.setMap(null);
-	    this.remove();
-	}
-    },
     initialize: function(){
 	this.gmap = this.options.listview.gmap;	    
 	this.model.on("change", this.render, this);
@@ -34,6 +24,19 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	this.model.on("dom-insert", this.domInsert, this);
 	this.on("markerDragEnd", this.changeLocation);
 	this.createEl();
+	if(this.model.get("isUser")){
+	    this.$el.addClass("user");
+	}
+    },
+    delete: function(){
+	if(confirm("Are you sure")){
+	    this.model.collection.remove(this.model);
+	    // console.log("deleting", this);
+	    // TODO : check that this is enough
+	    // http://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js
+	    this.marker.setMap(null);
+	    this.remove();
+	}
     },
     change: function() {
 	this.model.set({
