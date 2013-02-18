@@ -20,9 +20,11 @@ TZoneApp.TZoneMessages = Backbone.View.extend({
     },
     
     initialize: function(){
+        this.returningUser = false;
         this.options.appModel.bind('user-location-found', this.isLocatedCorrect, this);
         this.options.appModel.bind('user-location-not-found', this.findSelf, this);
         this.options.appModel.bind('user-added', this.exitMessage, this);
+        this.options.appModel.bind('return-visitor', this.setReturn, this);
         this.createEl();
         $(this.options.container).append(this.el);
     },
@@ -31,12 +33,18 @@ TZoneApp.TZoneMessages = Backbone.View.extend({
         
     }, 
     
+    setReturn: function() {
+        this.returningUser = true;
+    },
+    
     exitMessage: function(){
         this.$el.html(this.exitTemplate());
     },
     
     isLocatedCorrect: function(){
-        this.$el.html(this.locatedTemplate());
+        if(this.returningUser === false) {
+            this.$el.html(this.locatedTemplate());
+        }
     },
     
     locatedSuccess: function() {
@@ -44,7 +52,9 @@ TZoneApp.TZoneMessages = Backbone.View.extend({
     }, 
     
     findSelf: function() {
-        this.$el.html(this.findSelfTemplate());
+        if(this.returningUser === false) {
+            this.$el.html(this.findSelfTemplate());
+        }
     }, 
     
     createEl: function(){
