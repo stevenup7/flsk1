@@ -8,7 +8,7 @@ TZoneApp.TZoneContactList = Backbone.Collection.extend({
 	}
     },
     isUserInList: function(){
-	var userCount = this.collection.filter(function(contact){
+	var userCount = this.filter(function(contact){
 	    return contact.get("isUser");
 	});
 	if(userCount.length > 0){
