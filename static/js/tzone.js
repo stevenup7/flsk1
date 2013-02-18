@@ -20,6 +20,9 @@ $(document).ready(function () {
 		"container": "#friendlist",
 		"gmap": this.gmap
 	    });
+            
+            // create TZoneMessages
+            this.TZoneMessages = new TZoneApp.TZoneMessages({"container": "#tzone-messages", "appModel": this});
 	},
 	mapClicked: function(loc){
 	    this.contacts.addItem(loc.latLng);
@@ -44,9 +47,12 @@ $(document).ready(function () {
 //	    this.gmap.setCenter(
 //		this.gmap.addMarker(pos, "ff0000", "home").getPosition()
 //	    ).setZoom(11);
+            this.trigger("user-location-found");
 	},
 	userLocationFail: function(msg){
+            this.trigger("user-location-not-found");
 	    this.showMapMessage("Error", "Sorry our attempt to load your location failed. You can still click the map to add your location");
+            
 	},
 	showMapMessage: function(title, msg){
 	    $("#map-message .heading").text(title);
