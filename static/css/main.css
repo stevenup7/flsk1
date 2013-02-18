@@ -74,14 +74,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 5px;
     margin-bottom: 2px;
 }
-#friendlist i {
-    position: relative;
-    float:right;
-    margin-right: 5px;
-    top: -30px;
-}
-
-
 
 .times-view{
     width: 150px; 
@@ -126,4 +118,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 .work {
     background-color: #ccf1ff;
+}
+
+
+
+.contact {
+    position: relative;
+}
+
+#contactview .contract,
+#contactview .expand {
+    cursor: pointer; 
+    cursor: hand; 
+    position: absolute;
+    top: 2px;
+    right: 2px;
 }

@@ -20,6 +20,7 @@ $(document).ready(function () {
 		"container": "#friendlist",
 		"gmap": this.gmap
 	    });
+	    this.contacts.collection.bind("in-calendar", this.inCalendar, this);
             this.contacts.bind("load-render-completed", this.usersLoaded, this)
             // create TZoneMessages
             this.TZoneMessages = new TZoneApp.TZoneMessages({"container": "#tzone-messages", "appModel": this});
@@ -31,6 +32,11 @@ $(document).ready(function () {
 		this.trigger("new-visitor");
 	    }
 
+	},
+	inCalendar: function(){
+	    console.log("times person added");
+	    $("#times-wrapper .explain").remove();
+	    $('#main-tabs .times').tab('show');
 	},
 	mapClicked: function(loc){
 	    $('#userAddModal').modal();	    

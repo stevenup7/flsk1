@@ -3,16 +3,17 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     edit: false,
     rendered: false,
     isInCalendar: false, // has this model been added into the 'calendar table'
-    edittemplate: _.template('<input type="text" value="<%=contactName%>" tabindex="1" class="contactName" >'),
-    texttemplate: _.template('<div class="contact-name"><%=contactName%></div><div>' + 
-			     '<% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %></div>'),
+    viewtemplate: _.template('<div class="contact isUser<%=isUser%>"><div><%=contactName%></div><i class="expand icon icon-chevron-down"></i></div>'),
+    edittemplate: _.template('<div class="contact isUser<%=isUser%>"><label>Contact\'s Name</label><input type="text" value="<%=contactName%>" tabindex="1" class="contactName" ><i class="expand icon icon-chevron-left"></i><div><p class="btn add-to-table">Add to side by side comparison<p><p>You can update the location and timezone by dragging the pin on the map</p><span class="btn btn-danger delete-button">delete this contact</span> <span class="btn btn-primary done-button">done</span></div></div>'),
+    texttemplate: _.template('<%=contactName%> - <% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %>'),
     events: {
 	"blur input": "edited",
         "keyup input": "keyUp",
-	"click .edit": "toggleEdit",
+	"click .expand": "toggleEdit",
+	"click .done-button": "toggleEdit",
         "click .contact-name": "toggleEdit",
-	"click .icon-trash": "delete",
-	"click .icon-calendar": "inCalendar",
+	"click .delete-button": "delete",
+	"click .add-to-table": "inCalendar",
     },
     initialize: function(){
 	this.gmap = this.options.listview.gmap;	    
@@ -27,8 +28,23 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	    this.$el.addClass("user");
 	}
     },
+
+    render: function(){
+	if(this.marker){
+	    this.marker.setDraggable(this.edit);
+	}
+	if(this.edit){
+	    this.$el.html(this.edittemplate(this.model.toJSON()));
+	} else {
+	    this.$el.html(this.viewtemplate(this.model.toJSON()));
+	}
+	this.renderMarker();
+    },
+
     delete: function(){
-	if(confirm("Are you sure")){
+	// todo check if it is USER
+	var cname = this.model.get("contactName");
+	if(confirm("Are you sure you want to delete '" + cname + "'")){
 	    this.model.collection.remove(this.model);
 	    // console.log("deleting", this);
 	    // TODO : check that this is enough
@@ -63,6 +79,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	this.gmap.setZoom(6);
 	this.gmap.setCenter(this.marker.getPosition());
 	this.edit = !this.edit;
+	
 	this.render();
     }, 
     domRemove: function(){
@@ -84,23 +101,6 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     },	
     createEl: function(){
 	this.$el.html(this.texttemplate(this.model.toJSON()));
-    },
-    render: function(){
-	if(this.marker){
-	    this.marker.setDraggable(this.edit);
-	}
-	if(this.edit){
-	    this.$el.html(this.edittemplate(this.model.toJSON())+" <i class='edit icon-list'></i> <i class='icon-trash'></i>");
-	} else {
-	    if(this.model.get("isUser")){
-		this.$el.html("YOU:" + this.texttemplate(this.model.toJSON()) +
-			      " <i class='edit icon-edit'></i> <i class='icon icon-calendar'></i>");
-	    } else {
-		this.$el.html(this.texttemplate(this.model.toJSON()) + 
-			      " <i class='edit icon-edit'></i> <i class='icon icon-calendar'></i>");
-	    }
-	}
-	this.renderMarker();
     },
     renderMarker: function(){
 	if(this.marker === undefined){
