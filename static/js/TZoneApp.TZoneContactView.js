@@ -3,9 +3,8 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     edit: false,
     rendered: false,
     isInCalendar: false, // has this model been added into the 'calendar table'
-    edittemplate: _.template('<input type="text" value="<%=firstName%>" tabindex="1" class="firstName" >' +
-			     '<input type="text" value="<%=lastName%>" tabindex="2" class="lastName" >'),
-    texttemplate: _.template('<div class="contact-name"><%=firstName%> <%=lastName%></div><div>' + 
+    edittemplate: _.template('<input type="text" value="<%=contactName%>" tabindex="1" class="contactName" >'),
+    texttemplate: _.template('<div class="contact-name"><%=contactName%></div><div>' + 
 			     '<% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %></div>'),
     events: {
 	"blur input": "edited",
@@ -40,8 +39,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     },
     edited: function() {
 	this.model.set({
-	    "firstName": this.$el.find(".firstName").val(),
-	    "lastName" : this.$el.find(".lastName" ).val()
+	    "contactName": this.$el.find(".contactName").val()
 	});
     },
     changeLocation: function(loc){

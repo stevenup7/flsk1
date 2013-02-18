@@ -1,7 +1,6 @@
 TZoneApp.TZoneContact = Backbone.Model.extend({
     defauts:{
-	"firstName": "new",
-	"lastName":  "contact",
+	"contactName":  "contact",
 	"isUser":    false,
 	"lat":       90, // all good walrus live at the north pole
 	"lng":       0,
@@ -43,7 +42,7 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 	//console.log("   ", attrs);
 	//console.log("   ", options);
 	
-	if(attrs.firstName.indexOf("bad") >= 0){
+	if(attrs.contactName.indexOf("bad") >= 0){
 	    alert("bad name");
 	    return "Bad is a bad name";
 	}
@@ -61,8 +60,9 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 	console.log("has changed is called here");
 
 	if(window.username !== undefined){
+	    // TODO: fix this 
 	    //this.set({"owner": window.username});
-	    if(this.get("firstName") + this.get("lastName") !== "newcontact"){		
+	    if(this.get("contactName") !== "newcontact"){		
 		this.save();
 	    }
 	}

@@ -25,7 +25,26 @@ $(document).ready(function () {
             this.TZoneMessages = new TZoneApp.TZoneMessages({"container": "#tzone-messages", "appModel": this});
 	},
 	mapClicked: function(loc){
-	    this.contacts.addItem(loc.latLng);
+	    $('#userAddModal').modal();
+	    var that = this;
+	    $('#userAddModal').on('click', '.save-name', function(){
+		// TODO validate this, make this modal a view
+		var userName = $('#userAddModal .new-users-name').val();
+		console.log(userName, $.trim(userName));
+
+		if($.trim(userName) === ""){
+		    $('#userAddModal .alert').show();
+		} else {
+		    $('#userAddModal .new-users-name').val("");
+		    $('#userAddModal .alert').hide();
+		    $('#userAddModal').modal("hide")
+		    that.userNameSaved(loc, userName);
+		}
+	    });
+	},
+	userNameSaved: function(loc, name){
+	    this.trigger("user-added");
+	    this.contacts.addItem(loc.latLng, name);
 	},
 	getUserLocation: function(){
 	    var that = this;
@@ -43,7 +62,7 @@ $(document).ready(function () {
     	    var location = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 	    this.gmap.setCenter(location);
 	    console.log(" adding user location");
-	    this.contacts.addItem(location, "Your", "Location", true);
+	    this.contacts.addItem(location, "Your Location", true);
 //	    this.gmap.setCenter(
 //		this.gmap.addMarker(pos, "ff0000", "home").getPosition()
 //	    ).setZoom(11);
@@ -51,8 +70,7 @@ $(document).ready(function () {
 	},
 	userLocationFail: function(msg){
             this.trigger("user-location-not-found");
-	    this.showMapMessage("Error", "Sorry our attempt to load your location failed. You can still click the map to add your location");
-            
+	    this.showMapMessage("Error", "Sorry our attempt to load your location failed. You can still click the map to add your location");            
 	},
 	showMapMessage: function(title, msg){
 	    $("#map-message .heading").text(title);

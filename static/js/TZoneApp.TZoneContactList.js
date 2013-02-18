@@ -29,7 +29,7 @@ TZoneApp.TZoneContactList = Backbone.Collection.extend({
 		return -1;
 	    } else if(b.get("isUser")){
 		return 1;
-	    } else if(a.get("lastName").toUpperCase() > b.get("lastName").toUpperCase()){
+	    } else if(a.get("contactName").toUpperCase() > b.get("contactName").toUpperCase()){
 		return 1;
 	    } else {
 		return -1

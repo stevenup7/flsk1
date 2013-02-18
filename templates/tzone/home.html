@@ -35,21 +35,22 @@
 <div class="span4" id="secondary-content">
   <h2>My Contacts</h2>
   <div id="friendlist"></div>
-  <p id="nofriends">You dont have any contacts loaded as yet</p>
+
 </div>
 
 
 <div id="userAddModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="userAddModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="userAddModalLabel">Add New User</h3>
+    <h3 id="userAddModalLabel">Name your new contact</h3>
   </div>
   <div class="modal-body">
-    <label>Name</label><input type="text" class="" />
+    <label>New Contact's Name:</label><input type="text" class="new-users-name" />
+    <p class="alert alert-error hide">You need to name your walrus buddy.</p>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <button class="btn btn-primary save-name">Save changes</button>
   </div>
 </div>
 

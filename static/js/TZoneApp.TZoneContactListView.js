@@ -2,11 +2,11 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
     tagName: "div",
     id: "contactview",
     events: {
-	"click .reverse": "reverseit"
+
     },
     initialize: function(){
 	$(this.options.container).append(this.el);
-	this.$el.append("<ul class='list-container unstyled'></ul><span class='reverse'>reverse</span>");
+	this.$el.append("<ul class='list-container unstyled'></ul>");
 	this.gmap = this.options.gmap;
 	_.bindAll(this, "render", "addItem", "loadDone");
 	this.collection = new TZoneApp.TZoneContactList();
@@ -35,6 +35,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	}, this);
 	return this;
     },
+/*
     reverseit: function(e){
 	this.collection.models.reverse();
 	this.collection.trigger("dom-remove");
@@ -43,6 +44,8 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	}, this);
 	
     },
+
+*/
     addToCalendar: function(model, modelview){
 	// console.log("in calendar", model.toJSON(), modelview);
 	var listView = new TZoneApp.TZoneTimesView({
@@ -64,7 +67,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	    }).render();
 
     },
-    addItem: function(loc, firstName, lastName, isUser){
+    addItem: function(loc, contactName,  isUser){
 	var userCount = this.collection.filter(function(contact){
 	    return contact.get("isUser")
 	});
@@ -80,8 +83,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	this.collection.add(i);
 	console.log("obj created");
 	i.set({
-	    "firstName": firstName || "new",
-	    "lastName":  lastName  || "contact",
+	    "contactName":  contactName  || "new contact",
 	    "isUser":    isUser    || false,
 	    "lat":       loc.lat(),
 	    "lng":       loc.lng()
