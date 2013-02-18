@@ -28,6 +28,7 @@ TZoneApp.TZoneContactListView = Backbone.View.extend({
 	    this.addModelView(i);
 	}, this);
 	this.render();
+	this.trigger("load-render-completed");
     },
     render: function(){
 	_.each(this.collection.models, function(i){

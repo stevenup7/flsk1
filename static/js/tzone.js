@@ -20,14 +20,27 @@ $(document).ready(function () {
 		"container": "#friendlist",
 		"gmap": this.gmap
 	    });
-            
+            this.contacts.bind("load-render-completed", this.usersLoaded, this)
             // create TZoneMessages
             this.TZoneMessages = new TZoneApp.TZoneMessages({"container": "#tzone-messages", "appModel": this});
 	},
+	usersLoaded: function(){
+	    if(this.contacts.collection.isUserInList()){
+		this.trigger("return-visitor");
+	    } else {
+		this.trigger("new-visitor");
+	    }
+
+	},
 	mapClicked: function(loc){
-	    $('#userAddModal').modal();
+	    $('#userAddModal').modal();	    
+	    $('#userAddModal').on('shown', function () {
+		console.log("show");
+
+		$('#userAddModal .new-users-name').focus();
+	    });
 	    var that = this;
-	    $('#userAddModal').on('click', '.save-name', function(){
+	    function saveAndValidate(){
 		// TODO validate this, make this modal a view
 		var userName = $('#userAddModal .new-users-name').val();
 		console.log(userName, $.trim(userName));
@@ -40,6 +53,15 @@ $(document).ready(function () {
 		    $('#userAddModal').modal("hide")
 		    that.userNameSaved(loc, userName);
 		}
+    
+	    }
+	    $('#userAddModal .new-users-name').on('keyup', function(e){
+		if(e.which == 13){
+		    saveAndValidate();
+		}
+	    });
+	    $('#userAddModal').on('click', '.save-name', function(){
+		saveAndValidate();
 	    });
 	},
 	userNameSaved: function(loc, name){
