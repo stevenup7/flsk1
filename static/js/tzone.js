@@ -13,6 +13,7 @@ $(document).ready(function () {
 	cols: d3.scale.category10(),
 	initialize: function(){
 	    // Create a new Gooogle Map
+	    
 	    this.gmap = new GoogleMapHandler();
 	    this.getUserLocation();
 	    this.gmap.onClick(this, this.mapClicked);
