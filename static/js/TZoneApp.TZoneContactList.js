@@ -3,10 +3,14 @@ TZoneApp.TZoneContactList = Backbone.Collection.extend({
     url: "/tzone/",
     initialize: function(){
 	_.bindAll(this, "loadDone");
-	this.fetch({
+	if(window.username !== undefined){
+	    this.loadRecords();
+	}
+    },
+    loadRecords: function(){
+ 	this.fetch({
 	    success:function(self){
 		console.log("loaded");
-
 		self.loadDone();
 	    }, 
 	    error: function(){
