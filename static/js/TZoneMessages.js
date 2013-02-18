@@ -22,6 +22,7 @@ TZoneApp.TZoneMessages = Backbone.View.extend({
     initialize: function(){
         this.options.appModel.bind('user-location-found', this.isLocatedCorrect, this);
         this.options.appModel.bind('user-location-not-found', this.findSelf, this);
+        this.options.appModel.bind('user-added', this.exitMessage, this);
         this.createEl();
         $(this.options.container).append(this.el);
     },
