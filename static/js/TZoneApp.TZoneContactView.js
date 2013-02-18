@@ -8,7 +8,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     texttemplate: _.template('<div class="contact-name"><%=firstName%> <%=lastName%></div><div>' + 
 			     '<% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %></div>'),
     events: {
-	"blur input": "change",
+	"blur input": "edited",
         "keyup input": "keyUp",
 	"click .edit": "toggleEdit",
         "click .contact-name": "toggleEdit",
@@ -38,7 +38,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	    this.remove();
 	}
     },
-    change: function() {
+    edited: function() {
 	this.model.set({
 	    "firstName": this.$el.find(".firstName").val(),
 	    "lastName" : this.$el.find(".lastName" ).val()
@@ -56,7 +56,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	// TODO: if tabbing off last field tab to first
         // console.log(e);
         if(e.which === 13) {
-	    this.change();
+	    this.edited();
 	    this.edit = false;
 	    this.render();
         } // end if

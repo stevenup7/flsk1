@@ -12,8 +12,7 @@ $(document).ready(function () {
     TZoneApp.TZoneApp = Backbone.Model.extend({
 	cols: d3.scale.category10(),
 	initialize: function(){
-	    // Create a new Gooogle Map
-	    
+	    // Create a new Gooogle Map    
 	    this.gmap = new GoogleMapHandler();
 	    this.getUserLocation();
 	    this.gmap.onClick(this, this.mapClicked);
@@ -47,9 +46,16 @@ $(document).ready(function () {
 //	    ).setZoom(11);
 	},
 	userLocationFail: function(msg){
-	    // todo fix this 
-	    console.log("bad", msg);
+	    this.showMapMessage("Error", "Sorry our attempt to load your location failed. You can still click the map to add your location");
 	},
+	showMapMessage: function(title, msg){
+	    $("#map-message .heading").text(title);
+	    $("#map-message .message").text(msg);
+	    $("#map-message").show();
+	    $("#map-message .close").click(function(){
+		$("#map-message").hide();
+	    });	    
+	}
     });
     TZoneApp.app = new TZoneApp.TZoneApp();
 
