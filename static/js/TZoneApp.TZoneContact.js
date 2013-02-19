@@ -14,7 +14,7 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 	this.parseUTCOffset();
     },
     parseUTCOffset: function (){
-	console.log("parsing utcoffset");
+	///console.log("parsing utcoffset");
 
 	if(this.get("UTCOffset") !== undefined){
 	    var os = this.get("UTCOffset"); // something like "-0130"
@@ -57,7 +57,7 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
     },
     // TODO: validation
     haschanged: function(){
-	console.log("has changed is called here");
+	///console.log("has changed is called here");
 
 	if(window.username !== undefined){
 	    // TODO: fix this 
@@ -79,7 +79,7 @@ TZoneApp.TZoneContact = Backbone.Model.extend({
 		    hours:     Math.floor(data.gmtOffset),
 		    mins:      (data.gmtOffset - Math.floor(data.gmtOffset)) * 60
 		};
-		console.log("TZONE DATE", data, this.UTCOffset);
+		//console.log("TZONE DATE", data, this.UTCOffset);
 		self.set("timezoneid", data["timezoneId"]);
 	    } else {
 		self.set("timezoneid", "timezone unavailable");
