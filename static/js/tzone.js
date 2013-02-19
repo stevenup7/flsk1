@@ -42,24 +42,23 @@ $(document).ready(function () {
 	    $('#userAddModal').modal();	    
 	    $('#userAddModal').on('shown', function () {
 		console.log("show");
-
 		$('#userAddModal .new-users-name').focus();
 	    });
+	    this.currentContactLoc = loc
 	    var that = this;
 	    function saveAndValidate(){
 		// TODO validate this, make this modal a view
 		var userName = $('#userAddModal .new-users-name').val();
 		console.log(userName, $.trim(userName));
-
 		if($.trim(userName) === ""){
 		    $('#userAddModal .alert').show();
 		} else {
 		    $('#userAddModal .new-users-name').val("");
 		    $('#userAddModal .alert').hide();
 		    $('#userAddModal').modal("hide")
-		    that.userNameSaved(loc, userName);
+		    that.userNameSaved(that.currentContactLoc, userName);
+		    
 		}
-    
 	    }
 	    $('#userAddModal .new-users-name').on('keyup', function(e){
 		if(e.which == 13){
