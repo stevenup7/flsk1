@@ -57,7 +57,7 @@ def createNewUser():
         userQuery = {"username":  request.form['email']}
         u = g.db.users.find_one(userQuery)
         if u == None:
-            g.db.users.insert({"username": email, "passwordhashed": hashPass(password), levels: ["USER"]})
+            g.db.users.insert({"username": email, "passwordhashed": hashPass(password), "levels": ["USER"]})
             
             # we are all good 
             pass

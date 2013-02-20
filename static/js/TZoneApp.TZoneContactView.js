@@ -3,8 +3,8 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
     edit: false,
     rendered: false,
     isInCalendar: false, // has this model been added into the 'calendar table'
-    viewtemplate: _.template('<div class="contact isUser<%=isUser%>"><div><%=contactName%></div><i class="expand icon icon-chevron-down"></i></div>'),
-    edittemplate: _.template('<div class="contact isUser<%=isUser%>"><label>Contact\'s Name</label><input type="text" value="<%=contactName%>" tabindex="1" class="contactName" ><i class="expand icon icon-chevron-left"></i><div><p class="btn add-to-table">Add to side by side comparison<p><p>You can update the location and timezone by dragging the pin on the map</p><span class="btn btn-danger delete-button">delete this contact</span> <span class="btn btn-primary done-button">done</span></div></div>'),
+    viewtemplate: _.template('<div class="contact isUser<%=isUser%>"><div><span class="contact-name"><%=contactName%></span></div><i class="expand icon icon-chevron-down"></i><i class="add-to-table add-to-table-icon icon-plus icon"></i></div>'),
+    edittemplate: _.template('<div class="contact isUser<%=isUser%>"><label>Contact\'s Name</label><input type="text" value="<%=contactName%>" tabindex="1" class="contactName" ><i class="expand icon icon-chevron-left"></i><div><p class="btn add-to-table "><i class="icon-plus icon"></i> Add to side by side comparison<p><p>You can update the location and timezone by dragging the pin on the map</p><span class="btn btn-danger delete-button">delete this contact</span> <span class="btn btn-primary done-button">done</span></div></div>'),
     texttemplate: _.template('<%=contactName%> - <% if(typeof(timezoneid) !== "undefined"){ %> <%=timezoneid%><% } %>'),
     events: {
 	"blur input": "edited",
@@ -26,6 +26,7 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	this.createEl();
 	if(this.model.get("isUser")){
 	    this.$el.addClass("user");
+	    this.inCalendar(false);
 	}
     },
 
@@ -93,10 +94,11 @@ TZoneApp.TZoneContactView = Backbone.View.extend({
 	    this.options.container.append(this.el);
 	}
     },
-    inCalendar: function(){
+    inCalendar: function(toggleTab){
+	// TODO remove 
 	if(!this.isInCalendar){
 	    this.isInCalendar = true;
-	    this.model.collection.trigger("in-calendar", this.model, this);
+	    this.model.collection.trigger("in-calendar", this.model, this, toggleTab);
 	}
     },	
     createEl: function(){

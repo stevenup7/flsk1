@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% block content %}
+<div class="span12" id="content1">
+  <h1>Create a new account</h1>
+  <form action="" method="post">   
+    <p>
+      <label>Your email address:</label>
+      <input type='email' name='email' value="{{email}}">
+    </p>
+    <p>
+      <label>Password:</label>
+      <input type='password' name='password'>
+    </p>
+    <p>
+      <label>Confirm Password:</label>
+      <input type='password' name='confirm_password'>
+    </p>
+    <p><input type='submit' value='Login'></p>
+  </form>
+</div>
+{% endblock %}
+ 
+{% block optional_scripts %}
+   <script type="text/javascript" src="/static/js/user/createaccount.js"></script>
+
+{% endblock %}

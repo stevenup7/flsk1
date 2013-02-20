@@ -33,8 +33,10 @@ $(document).ready(function () {
 	    }
 
 	},
-	inCalendar: function(){
-	    console.log("times person added");
+	inCalendar: function(collection, view, toggleTab){
+	    if(toggleTab === false){
+		return true;
+	    }
 	    $("#times-wrapper .explain").remove();
 	    $('#main-tabs .times').tab('show');
 	},
@@ -46,7 +48,7 @@ $(document).ready(function () {
 	    });
 	    this.currentContactLoc = loc
 	    var that = this;
-	    function saveAndValidate(){
+	    var saveAndValidate = function(){
 		// TODO validate this, make this modal a view
 		var userName = $('#userAddModal .new-users-name').val();
 		console.log(userName, $.trim(userName));
@@ -56,8 +58,7 @@ $(document).ready(function () {
 		    $('#userAddModal .new-users-name').val("");
 		    $('#userAddModal .alert').hide();
 		    $('#userAddModal').modal("hide")
-		    that.userNameSaved(that.currentContactLoc, userName);
-		    
+		    that.userNameSaved(that.currentContactLoc, userName);		    
 		}
 	    }
 	    $('#userAddModal .new-users-name').on('keyup', function(e){
