@@ -20,7 +20,7 @@ def home():
 def tzone(entryid=None):
     if entryid == None:
         data = []
-        for f in g.db.friends.find():
+        for f in g.db.friends.find({"uid": session['uid']}):
             insertUTCOffset(f)
             f["id"] = str(f["_id"])
             del f["_id"]

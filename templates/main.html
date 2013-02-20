@@ -49,6 +49,14 @@
 	    {% if "SUPERUSER" in session["levels"] %}
 	    <li><a href="/users/admin">admin menu</a></li> 
 	    {% endif %}
+
+	    {% if session["username"] %}
+	    <li><a href="/users/logout">logout</a></li>
+	    {% else %}
+	    <li><a href="/users/login">login</a></li>
+	    <li><a href="/users/create_account">or create a new account</a></li>
+	    {% endif %} 
+
 	  </ul>
 	</div>
       </div>

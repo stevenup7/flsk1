@@ -35,9 +35,45 @@ def login_required(level=None):
         return decorated_function
     return decorator
 
-#todo make a json login required decoator which returns {"status" :  "login-required" }
+@mod.route('/create_account', methods=['GET'])
+@templated('users/create_account.html')
+def createUserForm():
+    # TODO: replace with user
+    email = request.args.get("email")
+    if email == None:
+        email = ""
+    return {"email": email}
+
+@mod.route('/create_account', methods=['POST'])
+@templated('users/new_account.html')
+def createNewUser():
+    email = request.form['email']
+    password = request.form['password']
+    confirm_password = request.form['confirm_password']
+    if password != confirm_password:
+        flash(u'Passwords dont match', 'alert-error')
+        return redirect(url_for('users.createUserForm',email=email))
+    else:
+        userQuery = {"username":  request.form['email']}
+        u = g.db.users.find_one(userQuery)
+        if u == None:
+            g.db.users.insert({"username": email, "passwordhashed": hashPass(password), levels: ["USER"]})
+            
+            # we are all good 
+            pass
+        else:
+            flash(u'This email address is already in use', 'alert-error')
+            return redirect(url_for('users.login'))
+    print email, password, confirm_password
+    #hashifyPassword(json)
+    #return createDocument(g.db.users, json)
 
 
+def isUserNameAvalable():
+    json = request.json
+    print json
+
+#TODO make a json login required decoator which returns {"status" :  "login-required" }
 @mod.route('/admin', methods=['GET'])
 @login_required('SUPERUSER')
 @templated('users/admin.html')
@@ -113,6 +149,8 @@ def logout():
     flash(u'Logout successful', 'alert-info')
     # remove the username from the session if it's there
     session.pop('username', None)
+    session.pop('levels', None)
+    session.pop('uid', None)
     return redirect(url_for('index'))
 
 @mod.route('/install')
