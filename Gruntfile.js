@@ -14,6 +14,13 @@ module.exports = function(grunt) {
 		}
 	    }
 	},
+        exec: {
+            
+
+            run_python_unit_tests: {
+                command: 'python flask_tests.py'
+            }
+        }
 /*	watch: {
 	    files: ['<%= jshint.files %>'],
 	    tasks: ['jshint', 'qunit']
@@ -22,10 +29,11 @@ module.exports = function(grunt) {
 
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-exec');
 
-    grunt.registerTask('test', ['jshint']);
+    grunt.registerTask('test', ['jshint', 'exec']);
 
-    grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('default', ['jshint', 'exec']);
 
 };
 
