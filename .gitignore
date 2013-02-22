@@ -4,3 +4,4 @@
 *.pyc
 config.py
 *.wsgi
+node_modules/
